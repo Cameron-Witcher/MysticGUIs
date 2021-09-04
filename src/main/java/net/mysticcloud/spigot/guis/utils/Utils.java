@@ -128,6 +128,7 @@ public class Utils {
 	public static Map<String, InventoryCreator> getGuis() {
 		return guis;
 	}
+	
 
 	public static void sendPluginMessage(Player player, String channel, String... arguments) {
 		if (arguments == null | arguments.length == 0)

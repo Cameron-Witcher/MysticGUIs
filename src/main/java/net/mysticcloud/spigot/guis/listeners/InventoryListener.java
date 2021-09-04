@@ -45,7 +45,8 @@ public class InventoryListener implements Listener {
 						}
 						break;
 					case "join_server":
-						Utils.sendPluginMessage((Player) e.getWhoClicked(), "Connect", json.getString("server"));
+						Utils.sendPluginMessage((Player) e.getWhoClicked(), "BungeeCord", "Connect",
+								json.getString("server"));
 						break;
 					case "close_gui":
 						e.getWhoClicked().closeInventory();

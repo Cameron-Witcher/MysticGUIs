@@ -40,8 +40,12 @@ public class IDatabase {
 //			
 
 		try {
-			if (driver.equals(SQLDriver.MYSQL)) {
+			if (driver.equals(SQLDriver.MYSQL_OLD)) {
 				Class.forName("com.mysql.jdbc.Driver");
+				connection = DriverManager.getConnection(url, properties);
+			}
+			if (driver.equals(SQLDriver.MYSQL)) {
+				Class.forName("com.mysql.cj.jdbc.Driver");
 				connection = DriverManager.getConnection(url, properties);
 			}
 			if (driver.equals(SQLDriver.SQLITE)) {

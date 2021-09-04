@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +15,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import net.md_5.bungee.api.ChatColor;
+import net.mysticcloud.spigot.guis.utils.logs.Log;
 
 public class Utils {
 
@@ -135,5 +137,19 @@ public class Utils {
 			out.writeUTF(s);
 		}
 		player.sendPluginMessage(getPlugin(), channel, out.toByteArray());
+	}
+
+	public static void log(String log) {
+		log(new Log().setMessage(log).setGlobal(false));
+	}
+
+	public static void log(Log log) {
+		if (log.isGlobal())
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player.hasPermission("mysticguis.admin")) {
+					player.sendMessage(log + "");
+				}
+			}
+		System.out.println(log);
 	}
 }

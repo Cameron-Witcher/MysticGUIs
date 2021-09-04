@@ -35,6 +35,8 @@ public class Utils {
 	private static Economy econ;
 	private static Permission perms;
 	private static Chat chat;
+	
+	private static boolean limited = false;
 
 	private static Map<String, Boolean> deps = new HashMap<>();
 
@@ -78,6 +80,14 @@ public class Utils {
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 
+	}
+	
+	public static boolean limited() {
+		return limited;
+	}
+	
+	public static void limit(boolean limit) {
+		limited = limit;
 	}
 
 	public static boolean dependencyEnabled(String key) {
@@ -181,7 +191,6 @@ public class Utils {
 			guis.put(id, gui);
 			log("Successfully loaded " + id);
 		}
-		log("Enabled.");
 	}
 
 	public static String colorize(String message) {
@@ -231,4 +240,5 @@ public class Utils {
 			}
 		System.out.println(log);
 	}
+
 }

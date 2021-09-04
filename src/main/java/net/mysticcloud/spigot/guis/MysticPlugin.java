@@ -17,6 +17,23 @@ public class MysticPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		Utils.limit(!register());
+
+		//TODO add heartbeat that checks if limit has been removed. Erase key if limit is removed maliciously
+
+		Utils.log("&aEnabling");
+
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+		Utils.init(this);
+
+		new InventoryListener(this);
+		new InventoryCommand(this, "inventory");
+
+		Utils.log("Enabled.");
+	}
+
+	private boolean register() {
 		String license = "<Insert Key Here>";
 		if (getConfig().isSet("license"))
 			license = getConfig().getString("license");
@@ -27,7 +44,7 @@ public class MysticPlugin extends JavaPlugin {
 					"You license hasn't been set. You must enter your license into the config.yml file before the plugin can enable.")
 							.setLevel(AlertLog.MEDIUM));
 			setEnabled(false);
-			return;
+			return false;
 		}
 
 		JSONObject json = checkKey(license);
@@ -35,21 +52,14 @@ public class MysticPlugin extends JavaPlugin {
 		if (json != null) {
 			Utils.log("&a&lSuccess&7 > &ffound license key (" + license + " registered to email: "
 					+ json.getString("email"));
-			Utils.log("&aEnabling");
 		} else {
 			Utils.log(new AlertLog(
 					"Could not find that license in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
 							.setLevel(AlertLog.EXTEREME));
 			setEnabled(false);
-			return;
+			return false;
 		}
-
-		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
-		Utils.init(this);
-
-		new InventoryListener(this);
-		new InventoryCommand(this, "inventory");
+		return true;
 	}
 
 	private JSONObject checkKey(String key) {

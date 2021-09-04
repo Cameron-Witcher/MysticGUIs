@@ -66,7 +66,7 @@ public class Utils {
 	private static void loadGuis() {
 		log("Loading GUIs...");
 		for (String id : plugin.getConfig().getConfigurationSection("guis").getKeys(false)) {
-			log("  - Loading " + id + "...");
+			log(" - Loading " + id + "...");
 			int size = plugin.getConfig().getInt("guis." + id + ".size", 9);
 			String sname = colorize(plugin.getConfig().getString("guis." + id + ".name", "Custom GUI"));
 			String array = "";
@@ -77,11 +77,11 @@ public class Utils {
 			InventoryCreator gui = new InventoryCreator(sname, null, size);
 			int i = 0;
 			for (String iid : plugin.getConfig().getConfigurationSection("guis." + id + ".items").getKeys(false)) {
-				log("    - Adding item: " + iid);
+				log("  - Adding item: " + iid);
 				JSONObject json = new JSONObject("{}");
 				String name = plugin.getConfig().getString("guis." + id + ".items." + iid);
 				if (name.contains("{")) {
-					log("      - Configuring JSON (" + id + ":" + iid + ")...");
+					log("   - Configuring JSON (" + id + ":" + iid + ")...");
 					String data = "";
 					for (int a = name.indexOf("{"); a != name.length(); a++) {
 						data = data + name.charAt(a);

@@ -5,7 +5,7 @@ description: Custom GUIs brought to you by the creator of MysticCloud.net
 api-version: 1.16
 api: Spigot
 main: net.mysticcloud.spigot.guis.MysticPlugin
-soft-depend:
+softdepend:
 - Vault
 commands:
    inventory:

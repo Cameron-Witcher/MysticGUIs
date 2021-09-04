@@ -30,6 +30,8 @@ public class GuiManager {
 	}
 
 	public static void openInventory(Player player, Inventory inventory, String title) {
+		if (inventory == null)
+			return;
 		if (invTracker.containsKey(player.getUniqueId())) {
 			switchInventory(player, inventory, title);
 			return;
@@ -43,6 +45,8 @@ public class GuiManager {
 	}
 
 	public static void switchInventory(Player player, Inventory inventory, String title) {
+		if (inventory == null)
+			return;
 		if (waitingInv == null) {
 			init();
 		}

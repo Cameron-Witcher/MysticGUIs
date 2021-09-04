@@ -102,14 +102,22 @@ public class Utils {
 
 	private static boolean setupChat() {
 		RegisteredServiceProvider<Chat> rsp = plugin.getServer().getServicesManager().getRegistration(Chat.class);
-		chat = rsp.getProvider();
+		try {
+			chat = rsp.getProvider();
+		} catch (NullPointerException ex) {
+			return false;
+		}
 		return chat != null;
 	}
 
 	private static boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = plugin.getServer().getServicesManager()
 				.getRegistration(Permission.class);
-		perms = rsp.getProvider();
+		try {
+			perms = rsp.getProvider();
+		} catch (NullPointerException ex) {
+			return false;
+		}
 		return perms != null;
 	}
 

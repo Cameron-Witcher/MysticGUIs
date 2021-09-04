@@ -48,7 +48,7 @@ public class Utils {
 			c.add("XAXBXCXDX");
 			c.add("XXXXYXXXX");
 
-			plugin.getConfig().set("guis.example.config)", c);
+			plugin.getConfig().set("guis.example.config", c);
 
 			plugin.saveConfig();
 

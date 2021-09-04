@@ -77,10 +77,11 @@ public class Utils {
 			InventoryCreator gui = new InventoryCreator(sname, null, size);
 			int i = 0;
 			for (String iid : plugin.getConfig().getConfigurationSection("guis." + id + ".items").getKeys(false)) {
+				log("    - Adding item: " + iid);
 				JSONObject json = new JSONObject("{}");
 				String name = plugin.getConfig().getString("guis." + id + ".items." + iid);
 				if (name.contains("{")) {
-					log("    - Configuring JSON (" + id + ")...");
+					log("      - Configuring JSON (" + id + ":" + iid + ")...");
 					String data = "";
 					for (int a = name.indexOf("{"); a != name.length(); a++) {
 						data = data + name.charAt(a);

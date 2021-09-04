@@ -26,5 +26,4 @@ public class InventoryCommand implements CommandExecutor {
 		}
 		return true;
 	}
-
 }

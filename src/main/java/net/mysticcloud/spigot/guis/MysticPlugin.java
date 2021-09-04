@@ -17,28 +17,28 @@ public class MysticPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		String licence = "<Insert Key Here>";
-		if (getConfig().isSet("licence"))
-			licence = getConfig().getString("licence");
+		String license = "<Insert Key Here>";
+		if (getConfig().isSet("license"))
+			license = getConfig().getString("license");
 		else {
-			getConfig().set("licence", licence);
+			getConfig().set("license", license);
 			saveConfig();
 			Utils.log(new AlertLog(
-					"You licence hasn't been set. You must enter your licence into the config.yml file before the plugin can enable.")
+					"You license hasn't been set. You must enter your license into the config.yml file before the plugin can enable.")
 							.setLevel(AlertLog.MEDIUM));
 			setEnabled(false);
 			return;
 		}
 
-		JSONObject json = checkKey(licence);
+		JSONObject json = checkKey(license);
 
 		if (json != null) {
-			Utils.log("&a&lSuccess&7 > &ffound licence key (" + licence + " registered to email: "
+			Utils.log("&a&lSuccess&7 > &ffound license key (" + license + " registered to email: "
 					+ json.getString("email"));
 			Utils.log("&aEnabling");
 		} else {
 			Utils.log(new AlertLog(
-					"Could not find that licence in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
+					"Could not find that license in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
 							.setLevel(AlertLog.EXTEREME));
 			setEnabled(false);
 			return;
@@ -55,11 +55,11 @@ public class MysticPlugin extends JavaPlugin {
 				"Oys6JTVv7cFN4Z349!5ahDj2");
 		try {
 			if (db.init()) {
-				ResultSet rs = db.query("SELECT * FROM mysticguis WHERE licence='" + key + "';");
+				ResultSet rs = db.query("SELECT * FROM mysticguis WHERE license='" + key + "';");
 				if (rs != null) {
 					while (rs.next()) {
 						JSONObject json = new JSONObject("{}");
-						json.put("licence", key);
+						json.put("license", key);
 						json.put("email", rs.getString("email"));
 						json.put("json", new JSONObject(rs.getString("json")));
 

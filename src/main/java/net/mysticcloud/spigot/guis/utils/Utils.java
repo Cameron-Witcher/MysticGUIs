@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json2.JSONObject;
 
@@ -15,6 +18,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.economy.Economy;
 import net.mysticcloud.spigot.guis.utils.logs.Log;
 
 public class Utils {
@@ -24,6 +28,10 @@ public class Utils {
 	private static Map<String, InventoryCreator> guis = new HashMap<>();
 
 	public static String prefix = colorize("&3&lGuis&r&f >&7 ");
+
+	private static Economy econ;
+
+	private static Map<String, Boolean> deps = new HashMap<>();
 
 	public static void init(JavaPlugin main) {
 		plugin = main;
@@ -57,10 +65,34 @@ public class Utils {
 			loadGuis();
 
 		}
+
+		deps.put("vault", setupEconomy());
+
+		for (Entry<String, Boolean> e : deps.entrySet())
+			log("Dependency check (" + e.getKey() + "): " + e.getValue());
+
 	}
 
-	public static JavaPlugin getPlugin() {
-		return plugin;
+	public static boolean dependencyEnabled(String key) {
+		key = key.toLowerCase();
+		return deps.containsKey(key) ? deps.get(key) : false;
+	}
+
+	private static boolean setupEconomy() {
+		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+
+		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
+	}
+
+	public static Economy getEconomy() {
+		return econ;
 	}
 
 	private static void loadGuis() {
@@ -142,6 +174,10 @@ public class Utils {
 			out.writeUTF(s);
 		}
 		player.sendPluginMessage(getPlugin(), channel, out.toByteArray());
+	}
+
+	public static Plugin getPlugin() {
+		return plugin;
 	}
 
 	public static void log(String log) {

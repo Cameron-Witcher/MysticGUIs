@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.mysticcloud.spigot.guis.commands.listeners.InventoryTabCompleter;
 import net.mysticcloud.spigot.guis.utils.GuiManager;
 import net.mysticcloud.spigot.guis.utils.Utils;
 
@@ -14,6 +15,7 @@ public class InventoryCommand implements CommandExecutor {
 
 	public InventoryCommand(JavaPlugin plugin, String cmd) {
 		plugin.getCommand(cmd).setExecutor(this);
+		plugin.getCommand(cmd).setTabCompleter(new InventoryTabCompleter());
 	}
 
 	@Override

@@ -20,7 +20,6 @@ public class InventoryTabCompleter implements TabCompleter {
 		for (String key : Utils.getGuis().keySet()) {
 			invs.add(key);
 		}
-		invs.add("remove");
 	}
 
 	@Override

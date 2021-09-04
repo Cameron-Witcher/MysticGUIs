@@ -44,6 +44,8 @@ public class MysticPlugin extends JavaPlugin {
 			return;
 		}
 
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
 		Utils.init(this);
 
 		new InventoryListener(this);

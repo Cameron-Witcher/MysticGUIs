@@ -19,6 +19,7 @@ import com.google.common.io.ByteStreams;
 
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
+import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
 import net.mysticcloud.spigot.guis.utils.logs.Log;
 
 public class Utils {
@@ -80,11 +81,13 @@ public class Utils {
 
 	private static boolean setupEconomy() {
 		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+			log("Vault not installed.");
 			return false;
 		}
 
 		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
+			log(new AlertLog("Error hooking into Vault."));
 			return false;
 		}
 		econ = rsp.getProvider();

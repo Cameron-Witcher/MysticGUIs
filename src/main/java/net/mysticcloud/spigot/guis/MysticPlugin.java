@@ -38,7 +38,7 @@ public class MysticPlugin extends JavaPlugin {
 			Utils.log("&aEnabling");
 		} else {
 			Utils.log(new AlertLog(
-					"Could not find that licence in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com.")
+					"Could not find that licence in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
 							.setLevel(AlertLog.EXTEREME));
 			setEnabled(false);
 			return;

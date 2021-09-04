@@ -18,7 +18,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
 import net.mysticcloud.spigot.guis.utils.logs.Log;
 
@@ -31,6 +33,8 @@ public class Utils {
 	public static String prefix = colorize("&3&lGuis&r&f >&7 ");
 
 	private static Economy econ;
+	private static Permission perms;
+	private static Chat chat;
 
 	private static Map<String, Boolean> deps = new HashMap<>();
 
@@ -67,7 +71,9 @@ public class Utils {
 
 		}
 
-		deps.put("vault", setupEconomy());
+		deps.put("vault-econ", setupEconomy());
+		deps.put("vault-chat", setupChat());
+		deps.put("vault-perm", setupPermissions());
 
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
@@ -81,17 +87,38 @@ public class Utils {
 
 	private static boolean setupEconomy() {
 		if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-			log("Vault not installed.");
+			log("Vault not installed. Disabling Vault economy functions.");
 			return false;
 		}
 
 		RegisteredServiceProvider<Economy> rsp = plugin.getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
-			log(new AlertLog("Error hooking into Vault."));
+			log(new AlertLog("No existing economy found. Disabling Vault economy functions."));
 			return false;
 		}
 		econ = rsp.getProvider();
 		return econ != null;
+	}
+
+	private static boolean setupChat() {
+		RegisteredServiceProvider<Chat> rsp = plugin.getServer().getServicesManager().getRegistration(Chat.class);
+		chat = rsp.getProvider();
+		return chat != null;
+	}
+
+	private static boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> rsp = plugin.getServer().getServicesManager()
+				.getRegistration(Permission.class);
+		perms = rsp.getProvider();
+		return perms != null;
+	}
+
+	public static Permission getPermissions() {
+		return perms;
+	}
+
+	public static Chat getChat() {
+		return chat;
 	}
 
 	public static Economy getEconomy() {

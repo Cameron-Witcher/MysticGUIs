@@ -74,7 +74,7 @@ public class Utils {
 
 			InventoryCreator gui = new InventoryCreator(sname, null, size);
 			int i = 0;
-			for (String iid : plugin.getConfig().getConfigurationSection("guis." + id + "items").getKeys(false)) {
+			for (String iid : plugin.getConfig().getConfigurationSection("guis." + id + ".items").getKeys(false)) {
 				JSONObject json = new JSONObject("{}");
 				String name = plugin.getConfig().getString("guis." + id + ".items." + iid);
 				if (name.contains("{")) {

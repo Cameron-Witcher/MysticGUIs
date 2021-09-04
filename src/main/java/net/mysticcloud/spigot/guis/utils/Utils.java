@@ -64,7 +64,9 @@ public class Utils {
 	}
 
 	private static void loadGuis() {
+		log("Loading GUIs...");
 		for (String id : plugin.getConfig().getConfigurationSection("guis").getKeys(false)) {
+			log("  - Loading " + id + "...");
 			int size = plugin.getConfig().getInt("guis." + id + ".size", 9);
 			String sname = colorize(plugin.getConfig().getString("guis." + id + ".name", "Custom GUI"));
 			String array = "";
@@ -78,6 +80,7 @@ public class Utils {
 				JSONObject json = new JSONObject("{}");
 				String name = plugin.getConfig().getString("guis." + id + ".items." + iid);
 				if (name.contains("{")) {
+					log("    - Configuring JSON (" + id + ")...");
 					String data = "";
 					for (int a = name.indexOf("{"); a != name.length(); a++) {
 						data = data + name.charAt(a);
@@ -105,8 +108,9 @@ public class Utils {
 			gui.setConfiguration(array.toCharArray());
 
 			guis.put(id, gui);
-
+			log("Successfully loaded " + id);
 		}
+		log("Enabled.");
 	}
 
 	public static String colorize(String message) {
@@ -128,7 +132,6 @@ public class Utils {
 	public static Map<String, InventoryCreator> getGuis() {
 		return guis;
 	}
-	
 
 	public static void sendPluginMessage(Player player, String channel, String... arguments) {
 		if (arguments == null | arguments.length == 0)

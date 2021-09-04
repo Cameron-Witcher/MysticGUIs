@@ -1,5 +1,6 @@
 package net.mysticcloud.spigot.guis.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +22,17 @@ public class InventoryCommand implements CommandExecutor {
 			if (args.length == 0)
 				return false;
 			if (sender.hasPermission("guis." + args[0])) {
-				GuiManager.openInventory((Player) sender, Utils.getGuis().get(args[0]).getInventory(), args[0]);
+				Player opener = args.length >= 2 ? Bukkit.getPlayer(args[1]) : (Player) sender;
+				if (opener == null) {
+					sender.sendMessage(Utils.prefix + "Sorry, that player doesn't seem to be online.");
+					return true;
+				}
+				try {
+					GuiManager.openInventory(opener, Utils.getGuis().get(args[0]).getInventory(), args[0]);
+				} catch (NullPointerException ex) {
+					sender.sendMessage(Utils.prefix + "There was an error opening that GUI. Does it exist?");
+				}
+
 			}
 		}
 		return true;

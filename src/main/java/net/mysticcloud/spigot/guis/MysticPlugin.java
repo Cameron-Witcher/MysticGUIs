@@ -51,7 +51,7 @@ public class MysticPlugin extends JavaPlugin {
 	}
 
 	private JSONObject checkKey(String key) {
-		IDatabase db = new IDatabase(SQLDriver.MYSQL, "sql.mysticcloud.net", "s16_mysticguis", 3306, "u16_npw9pfa6hB",
+		IDatabase db = new IDatabase(SQLDriver.MYSQL, "sql.mysticcloud.net", "s16_plugins", 3306, "u16_npw9pfa6hB",
 				"Oys6JTVv7cFN4Z349!5ahDj2");
 		try {
 			if (db.init()) {

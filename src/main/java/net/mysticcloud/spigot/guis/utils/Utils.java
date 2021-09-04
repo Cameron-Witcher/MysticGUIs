@@ -31,7 +31,7 @@ public class Utils {
 			loadGuis();
 		} else {
 
-			plugin.getConfig().set("gui.size", 27);
+			plugin.getConfig().set("guis.example.size", 27);
 			plugin.getConfig().set("guis.example.items.X", "GRAY_STAINED_GLASS_PANE{\"name\":\"&7Choose an option.\"}");
 			plugin.getConfig().set("guis.example.items.A",
 					"DIAMOND_SWORD{\"name\":\"&6&lSurvival\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"survivalhub\"}");

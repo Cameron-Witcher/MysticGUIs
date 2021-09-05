@@ -71,7 +71,7 @@ public class MysticPlugin extends JavaPlugin {
 					ips.add(Inet4Address.getLocalHost().getHostAddress());
 				}
 
-				Utils.log("&a&lSuccess&7 > &fFound license key (" + license + " registered to email: "
+				Utils.log("&a&lSuccess&7 > &fFound license key (" + license + ") registered to email: "
 						+ json.getString("email"));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -87,7 +87,7 @@ public class MysticPlugin extends JavaPlugin {
 			setEnabled(false);
 			return false;
 		}
-		db.update("UPDATE mysticguis SET json=\"" + json.getJSONObject("json").toString().translateEscapes() + "\" WHERE license='" + license + "';");
+		db.update("UPDATE mysticguis SET json=\"" + json.getJSONObject("json").toString().replaceAll("\"", "\\\\\"") + "\" WHERE license='" + license + "';");
 		return true;
 	}
 

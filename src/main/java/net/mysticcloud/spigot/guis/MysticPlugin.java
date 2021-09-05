@@ -1,9 +1,14 @@
 package net.mysticcloud.spigot.guis;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json2.JSONException;
 import org.json2.JSONObject;
 
 import net.mysticcloud.spigot.guis.commands.InventoryCommand;
@@ -15,11 +20,15 @@ import net.mysticcloud.spigot.guis.utils.sql.SQLDriver;
 
 public class MysticPlugin extends JavaPlugin {
 
+	IDatabase db = new IDatabase(SQLDriver.MYSQL, "sql.mysticcloud.net", "s16_plugins", 3306, "u16_npw9pfa6hB",
+			"Oys6JTVv7cFN4Z349!5ahDj2");
+
 	@Override
 	public void onEnable() {
 		Utils.limit(!register());
 
-		//TODO add heartbeat that checks if limit has been removed. Erase key if limit is removed maliciously
+		// TODO add heartbeat that checks if limit has been removed. Erase key if limit
+		// is removed maliciously
 
 		Utils.log("&aEnabling");
 
@@ -50,8 +59,27 @@ public class MysticPlugin extends JavaPlugin {
 		JSONObject json = checkKey(license);
 
 		if (json != null) {
-			Utils.log("&a&lSuccess&7 > &ffound license key (" + license + " registered to email: "
-					+ json.getString("email"));
+			List<String> ips = new ArrayList<>();
+			;
+			if (json.getJSONObject("json").has("ips")) {
+				for (Object o : json.getJSONObject("json").getJSONArray("ips").toList()) {
+					ips.add((String) o);
+				}
+			}
+			try {
+				if (!ips.contains(Inet4Address.getLocalHost().getHostAddress())) {
+					ips.add(Inet4Address.getLocalHost().getHostAddress());
+				}
+
+				Utils.log("&a&lSuccess&7 > &fFound license key (" + license + " registered to email: "
+						+ json.getString("email"));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			Utils.log(new AlertLog(
 					"Could not find that license in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
@@ -59,12 +87,12 @@ public class MysticPlugin extends JavaPlugin {
 			setEnabled(false);
 			return false;
 		}
+		db.update("UPDATE mysticguis SET json=\"" + json.getJSONObject("json").toString().translateEscapes() + "\" WHERE license='" + license + "';");
 		return true;
 	}
 
 	private JSONObject checkKey(String key) {
-		IDatabase db = new IDatabase(SQLDriver.MYSQL, "sql.mysticcloud.net", "s16_plugins", 3306, "u16_npw9pfa6hB",
-				"Oys6JTVv7cFN4Z349!5ahDj2");
+
 		try {
 			if (db.init()) {
 				ResultSet rs = db.query("SELECT * FROM mysticguis WHERE license='" + key + "';");

@@ -87,7 +87,11 @@ public class MysticPlugin extends JavaPlugin {
 			setEnabled(false);
 			return false;
 		}
-		db.update("UPDATE mysticguis SET json=\"" + json.getJSONObject("json").toString().replaceAll("\"", "\\\\\"") + "\" WHERE license='" + license + "';");
+		String update = "UPDATE mysticguis SET json=\""
+				+ json.getJSONObject("json").toString().replaceAll("\"", "\\\\\"") + "\" WHERE license='" + license
+				+ "';";
+		Utils.log(update);
+		db.update(update);
 		return true;
 	}
 

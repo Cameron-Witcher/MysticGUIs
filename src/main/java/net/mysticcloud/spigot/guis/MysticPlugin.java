@@ -1,9 +1,11 @@
 package net.mysticcloud.spigot.guis;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.Inet4Address;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +17,8 @@ import net.mysticcloud.spigot.guis.commands.InventoryCommand;
 import net.mysticcloud.spigot.guis.listeners.InventoryListener;
 import net.mysticcloud.spigot.guis.utils.Utils;
 import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
-import net.mysticcloud.spigot.guis.utils.sql.IDatabase;
-import net.mysticcloud.spigot.guis.utils.sql.SQLDriver;
 
 public class MysticPlugin extends JavaPlugin {
-
-	IDatabase db = new IDatabase(SQLDriver.MYSQL, "sql.mysticcloud.net", "s16_plugins", 3306, "u16_npw9pfa6hB",
-			"Oys6JTVv7cFN4Z349!5ahDj2");
 
 	@Override
 	public void onEnable() {
@@ -91,30 +88,32 @@ public class MysticPlugin extends JavaPlugin {
 				+ json.getJSONObject("json").toString().replaceAll("\"", "\\\\\"") + "\" WHERE license='" + license
 				+ "';";
 		Utils.log(update);
-		db.update(update);
 		return true;
 	}
 
 	private JSONObject checkKey(String key) {
 
+		JSONObject json = null;
 		try {
-			if (db.init()) {
-				ResultSet rs = db.query("SELECT * FROM mysticguis WHERE license='" + key + "';");
-				if (rs != null) {
-					while (rs.next()) {
-						JSONObject json = new JSONObject("{}");
-						json.put("license", key);
-						json.put("email", rs.getString("email"));
-						json.put("json", new JSONObject(rs.getString("json")));
+			boolean nsfw = true;
+			int loops = 0;
+			while (nsfw) {
+				URL apiUrl = new URL("https://api.mysticcloud.net/license/guis/" + key);
+				URLConnection yc = apiUrl.openConnection();
+				BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+				String inputLine;
 
-						return json;
-					}
-				}
+				while ((inputLine = in.readLine()) != null)
+					json = new JSONObject(inputLine);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+		} catch (Exception e1) {
+			json = new JSONObject("{'ERROR':'Could not find license'}");
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		return null;
+
+		return json;
 	}
 
 }

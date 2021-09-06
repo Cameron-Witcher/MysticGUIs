@@ -55,7 +55,7 @@ public class AdminCommands implements CommandExecutor {
 							Utils.colorize(Utils.PREFIX + "Saved license to config. Attempting to unlock plugin..."));
 
 					sender.sendMessage(Utils.colorize(Utils.PREFIX + (((MysticPlugin) Utils.getPlugin()).register()
-							? "Successfully registered and unlocked with license " + args[0] + "."
+							? "Successfully registered and unlocked with license " + args[1] + "."
 							: "There was an error registering using that key. Check your key again, and attempt a restart.")));
 
 					Utils.registerGuis();

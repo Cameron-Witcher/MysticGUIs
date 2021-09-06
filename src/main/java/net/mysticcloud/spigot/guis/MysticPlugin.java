@@ -95,22 +95,16 @@ public class MysticPlugin extends JavaPlugin {
 
 		JSONObject json = null;
 		try {
-			boolean nsfw = true;
-			int loops = 0;
-			while (nsfw) {
-				URL apiUrl = new URL("https://api.mysticcloud.net/license/guis/" + key);
-				URLConnection yc = apiUrl.openConnection();
-				BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-				String inputLine;
+			URL apiUrl = new URL("https://api.mysticcloud.net/license/guis/" + key);
+			URLConnection yc = apiUrl.openConnection();
+			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+			String inputLine;
 
-				while ((inputLine = in.readLine()) != null)
-					json = new JSONObject(inputLine);
-			}
+			while ((inputLine = in.readLine()) != null)
+				json = new JSONObject(inputLine);
 
 		} catch (Exception e1) {
 			json = new JSONObject("{'ERROR':'Could not find license'}");
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 
 		return json;

@@ -49,6 +49,22 @@ public class Utils {
 
 	public static void init(JavaPlugin main) {
 		plugin = main;
+		
+		registerGuis();
+
+		deps.put("vault-econ", setupEconomy());
+		deps.put("vault-chat", setupChat());
+		deps.put("vault-perm", setupPermissions());
+
+		for (Entry<String, Boolean> e : deps.entrySet())
+			log("Dependency check (" + e.getKey() + "): " + e.getValue());
+
+	}
+	
+	public static void registerGuis() {
+		deps.clear();
+		guis.clear();
+		
 		if (plugin.getConfig().isSet("guis")) {
 			loadGuis();
 		} else {
@@ -79,14 +95,6 @@ public class Utils {
 			loadGuis();
 
 		}
-
-		deps.put("vault-econ", setupEconomy());
-		deps.put("vault-chat", setupChat());
-		deps.put("vault-perm", setupPermissions());
-
-		for (Entry<String, Boolean> e : deps.entrySet())
-			log("Dependency check (" + e.getKey() + "): " + e.getValue());
-
 	}
 
 	public static boolean limited() {

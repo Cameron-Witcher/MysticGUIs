@@ -58,6 +58,10 @@ public class AdminCommands implements CommandExecutor {
 							? "Successfully registered and unlocked with license " + args[0] + "."
 							: "There was an error registering using that key. Check your key again, and attempt a restart.")));
 
+					if (!Utils.limited()) {
+						Utils.registerGuis();
+					}
+
 				}
 			} else {
 				sender.sendMessage(

@@ -49,7 +49,7 @@ public class Utils {
 
 	public static void init(JavaPlugin main) {
 		plugin = main;
-		
+
 		registerGuis();
 
 		deps.put("vault-econ", setupEconomy());
@@ -60,11 +60,11 @@ public class Utils {
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 
 	}
-	
+
 	public static void registerGuis() {
 		deps.clear();
 		guis.clear();
-		
+
 		if (plugin.getConfig().isSet("guis")) {
 			loadGuis();
 		} else {
@@ -160,7 +160,10 @@ public class Utils {
 
 	private static void loadGuis() {
 		log("Loading GUIs...");
+		int x = 0;
 		for (String id : plugin.getConfig().getConfigurationSection("guis").getKeys(false)) {
+			if (x == 5 && limited)
+				break;
 			log(" - Loading " + id + "...");
 			int size = plugin.getConfig().getInt("guis." + id + ".size", 9);
 			String sname = colorize(plugin.getConfig().getString("guis." + id + ".name", "Custom GUI"));
@@ -205,6 +208,7 @@ public class Utils {
 
 			guis.put(id, gui);
 			log("Successfully loaded " + id);
+			x = x + 1;
 		}
 	}
 

@@ -34,6 +34,7 @@ public class Utils {
 
 	public static final String PREFIX = colorize("&3&lGuis&r&f >&7 ");
 	public static final String PLUGIN = "MysticGuis";
+	private static final int MAX_LIMITED_GUIS = 4;
 
 	static JavaPlugin plugin = null;
 
@@ -162,7 +163,7 @@ public class Utils {
 		log("Loading GUIs...");
 		int x = 0;
 		for (String id : plugin.getConfig().getConfigurationSection("guis").getKeys(false)) {
-			if (x == 5 && limited)
+			if (x == MAX_LIMITED_GUIS && limited)
 				break;
 			log(" - Loading " + id + "...");
 			int size = plugin.getConfig().getInt("guis." + id + ".size", 9);

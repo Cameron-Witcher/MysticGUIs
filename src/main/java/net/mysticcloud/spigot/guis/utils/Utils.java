@@ -1,6 +1,12 @@
 package net.mysticcloud.spigot.guis.utils;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +32,17 @@ import net.mysticcloud.spigot.guis.utils.logs.Log;
 
 public class Utils {
 
+	public static final String PREFIX = colorize("&3&lGuis&r&f >&7 ");
+	public static final String PLUGIN = "MysticGuis";
+
 	static JavaPlugin plugin = null;
 
 	private static Map<String, InventoryCreator> guis = new HashMap<>();
 
-	public static String prefix = colorize("&3&lGuis&r&f >&7 ");
-
 	private static Economy econ;
 	private static Permission perms;
 	private static Chat chat;
-	
+
 	private static boolean limited = false;
 
 	private static Map<String, Boolean> deps = new HashMap<>();
@@ -81,11 +88,11 @@ public class Utils {
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 
 	}
-	
+
 	public static boolean limited() {
 		return limited;
 	}
-	
+
 	public static void limit(boolean limit) {
 		limited = limit;
 	}
@@ -227,6 +234,59 @@ public class Utils {
 		return plugin;
 	}
 
+	public static boolean update() {
+
+		boolean success = true;
+		InputStream in = null;
+		FileOutputStream out = null;
+
+		try {
+
+			URL myUrl = new URL(
+					"https://jenkins.mysticcloud.net/job/MysticGuis/lastSuccessfulBuild/artifact/target/MysticGuis.jar");
+			HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
+			conn.setDoOutput(true);
+			conn.setReadTimeout(30000);
+			conn.setConnectTimeout(30000);
+			conn.setUseCaches(false);
+			conn.setAllowUserInteraction(false);
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Accept-Charset", "UTF-8");
+			conn.setRequestMethod("GET");
+			in = conn.getInputStream();
+			out = new FileOutputStream("plugins/" + PLUGIN + ".jar");
+			int c;
+			byte[] b = new byte[1024];
+			while ((c = in.read(b)) != -1)
+				out.write(b, 0, c);
+
+		}
+
+		catch (Exception ex) {
+			log(new AlertLog("There was an error updating. Check console for details."));
+			ex.printStackTrace();
+			success = false;
+		}
+
+		finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					log(new AlertLog("There was an error updating. Check console for details."));
+					e.printStackTrace();
+				}
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					log(new AlertLog("There was an error updating. Check console for details."));
+					e.printStackTrace();
+				}
+		}
+		return success;
+	}
+
 	public static void log(String log) {
 		log(new Log().setMessage(log).setGlobal(false));
 	}
@@ -234,7 +294,7 @@ public class Utils {
 	public static void log(Log log) {
 		if (log.isGlobal())
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				if (player.hasPermission("mysticguis.admin")) {
+				if (player.hasPermission(Perm.ADMIN)) {
 					player.sendMessage(log + "");
 				}
 			}

@@ -12,3 +12,13 @@ commands:
       usage: /inventory <inventory>
       aliases:
       - inv
+      - gui
+   guis:
+      usage: /guis
+      aliases:
+      - mysticgui
+      - mysticguis
+      - mgui
+      - mg
+      - mguis
+      - guiadmin

@@ -12,11 +12,11 @@ import org.bukkit.util.StringUtil;
 
 import net.mysticcloud.spigot.guis.utils.Utils;
 
-public class InventoryTabCompleter implements TabCompleter {
+public class PlayerTabCompleter implements TabCompleter {
 
 	private List<String> invs = new ArrayList<>();
 
-	public InventoryTabCompleter() {
+	public PlayerTabCompleter() {
 		for (String key : Utils.getGuis().keySet()) {
 			invs.add(key);
 		}

@@ -13,7 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json2.JSONException;
 import org.json2.JSONObject;
 
-import net.mysticcloud.spigot.guis.commands.InventoryCommand;
+import net.mysticcloud.spigot.guis.commands.AdminCommands;
+import net.mysticcloud.spigot.guis.commands.PlayerCommands;
 import net.mysticcloud.spigot.guis.listeners.InventoryListener;
 import net.mysticcloud.spigot.guis.utils.Utils;
 import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
@@ -34,12 +35,13 @@ public class MysticPlugin extends JavaPlugin {
 		Utils.init(this);
 
 		new InventoryListener(this);
-		new InventoryCommand(this, "inventory");
+		new PlayerCommands(this, "inventory");
+		new AdminCommands(this, "guis");
 
 		Utils.log("Enabled.");
 	}
 
-	private boolean register() {
+	public boolean register() {
 		String license = "<Insert Key Here>";
 		if (getConfig().isSet("license"))
 			license = getConfig().getString("license");

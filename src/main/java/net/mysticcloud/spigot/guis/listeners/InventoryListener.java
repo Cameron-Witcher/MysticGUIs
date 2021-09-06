@@ -41,7 +41,7 @@ public class InventoryListener implements Listener {
 									Utils.getGuis().get(json.getString("gui")).getInventory(), json.getString("gui"));
 						} catch (NullPointerException ex) {
 							e.getWhoClicked()
-									.sendMessage(Utils.prefix + "There was an error opening that GUI. Does it exist?");
+									.sendMessage(Utils.PREFIX + "There was an error opening that GUI. Does it exist?");
 						}
 						break;
 					case "join_server":

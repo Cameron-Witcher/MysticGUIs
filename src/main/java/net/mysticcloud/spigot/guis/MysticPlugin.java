@@ -28,7 +28,7 @@ public class MysticPlugin extends JavaPlugin {
 		// TODO add heartbeat that checks if limit has been removed. Erase key if limit
 		// is removed maliciously
 
-		Utils.log("&aEnabling");
+		Utils.log("&aEnabling" + (Utils.limited() ? " &7(limited-version)" : ""));
 
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -49,9 +49,8 @@ public class MysticPlugin extends JavaPlugin {
 			getConfig().set("license", license);
 			saveConfig();
 			Utils.log(new AlertLog(
-					"You license hasn't been set. You must enter your license into the config.yml file before the plugin can enable.")
+					"You license hasn't been set. You must enter your license into the config.yml file before the plugin can unlock.")
 							.setLevel(AlertLog.MEDIUM));
-			setEnabled(false);
 			return false;
 		}
 

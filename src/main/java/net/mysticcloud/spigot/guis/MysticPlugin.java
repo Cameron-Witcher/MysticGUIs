@@ -57,7 +57,7 @@ public class MysticPlugin extends JavaPlugin {
 
 		JSONObject json = checkKey(license);
 
-		if (json != null) {
+		if (!json.has("error")) {
 			List<String> ips = new ArrayList<>();
 			;
 			if (json.getJSONObject("json").has("ips")) {
@@ -83,7 +83,6 @@ public class MysticPlugin extends JavaPlugin {
 			Utils.log(new AlertLog(
 					"Could not find that license in the database. Please verify you've entered it correctly before contacting support at https://www.quickscythe.com")
 							.setLevel(AlertLog.EXTEREME));
-			setEnabled(false);
 			return false;
 		}
 		String update = "UPDATE mysticguis SET json=\""
@@ -106,7 +105,7 @@ public class MysticPlugin extends JavaPlugin {
 				json = new JSONObject(inputLine);
 
 		} catch (Exception e1) {
-			json = new JSONObject("{'ERROR':'Could not find license'}");
+			json = new JSONObject("{'error':'Could not find license'}");
 		}
 
 		return json;

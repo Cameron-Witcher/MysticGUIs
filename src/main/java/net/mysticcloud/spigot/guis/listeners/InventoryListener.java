@@ -38,7 +38,8 @@ public class InventoryListener implements Listener {
 					case "open_gui":
 						try {
 							GuiManager.openInventory((Player) e.getWhoClicked(),
-									Utils.getGuis().get(json.getString("gui")).getInventory(), json.getString("gui"));
+									Utils.getGuis().get(json.getString("gui")).getInventory((Player) e.getWhoClicked()),
+									json.getString("gui"));
 						} catch (NullPointerException ex) {
 							e.getWhoClicked()
 									.sendMessage(Utils.PREFIX + "There was an error opening that GUI. Does it exist?");

@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.json2.JSONObject;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+
 public class InventoryCreator {
 
 	String name;
@@ -120,8 +122,31 @@ public class InventoryCreator {
 	}
 
 	public Inventory getInventory() {
+		return getInventory(null);
+	}
+
+	public Inventory getInventory(Player player) {
 		int a = 0;
 		for (ItemStack i : items) {
+			if (player != null) {
+				if (Utils.dependencyEnabled("placeholderapi")) {
+					if (i.hasItemMeta()) {
+						ItemMeta im = i.getItemMeta();
+						if (im.hasDisplayName())
+							im.setDisplayName(PlaceholderAPI.setPlaceholders(player, im.getDisplayName()));
+
+						if (im.hasLore()) {
+							List<String> lore = new ArrayList<>();
+							for (String s : im.getLore()) {
+								lore.add(PlaceholderAPI.setPlaceholders(player, s));
+							}
+							im.setLore(lore);
+						}
+						i.setItemMeta(im);
+					}
+				}
+			}
+
 			if (a < inv.getSize())
 				inv.setItem(a, i);
 			a = a + 1;

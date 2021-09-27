@@ -56,6 +56,7 @@ public class Utils {
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
+		deps.put("placeholderapi", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
 
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());

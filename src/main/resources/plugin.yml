@@ -7,6 +7,7 @@ api: Spigot
 main: net.mysticcloud.spigot.guis.MysticPlugin
 softdepend:
 - Vault
+- PlaceholderAPI
 commands:
    inventory:
       usage: /inventory <inventory>

@@ -25,7 +25,7 @@ public class PlayerTabCompleter implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> completions = new ArrayList<>();
-		if (cmd.getName().equalsIgnoreCase("usertag")) {
+		if (cmd.getName().equalsIgnoreCase("inventory")) {
 			if (args.length == 1) {
 				StringUtil.copyPartialMatches(args[0], invs, completions);
 			}

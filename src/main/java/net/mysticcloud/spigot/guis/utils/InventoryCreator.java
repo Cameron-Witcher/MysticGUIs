@@ -29,7 +29,7 @@ public class InventoryCreator {
 	Map<Character, JSONObject> metadata = new HashMap<>();
 
 	public InventoryCreator(String name, Player holder, int size) {
-		this.name = name;
+		this.name = Utils.dependencyEnabled("placeholderapi") ? PlaceholderAPI.setPlaceholders(holder, name) : name;
 		this.holder = holder;
 		inv = Bukkit.createInventory(holder, size, Utils.colorize(name));
 	}

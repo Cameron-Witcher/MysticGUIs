@@ -27,6 +27,8 @@ public class AdminCommands implements CommandExecutor {
 					sender.sendMessage(Utils.colorize(Utils.PREFIX + "Below are all the avalible sub-commands"));
 					sender.sendMessage(Utils.colorize(
 							"/" + label + " update - Update the current jar automatically. (restart required)"));
+					sender.sendMessage(Utils.colorize(
+							"/" + label + " reload - Reloads and re-registers all inventories."));
 					if (Utils.limited())
 						sender.sendMessage(Utils.colorize(
 								"/" + label + " setkey <license> - Set your license key to unlock the full version."));
@@ -37,6 +39,10 @@ public class AdminCommands implements CommandExecutor {
 						sender.sendMessage(Utils.colorize(Utils.PREFIX + "Successfully downloaded " + Utils.PLUGIN
 								+ ".jar. Please restart the server as soon as possible to avoid any fatal bugs"));
 					}
+				}
+				if (args[0].equalsIgnoreCase("update")) {
+					Utils.registerGuis();
+					sender.sendMessage(Utils.PREFIX + "Inventories reloaded.");
 				}
 				if (args[0].equalsIgnoreCase("setkey")) {
 					if (args.length == 1) {

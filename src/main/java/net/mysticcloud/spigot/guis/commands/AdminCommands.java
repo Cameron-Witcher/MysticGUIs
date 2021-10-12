@@ -40,7 +40,7 @@ public class AdminCommands implements CommandExecutor {
 								+ ".jar. Please restart the server as soon as possible to avoid any fatal bugs"));
 					}
 				}
-				if (args[0].equalsIgnoreCase("update")) {
+				if (args[0].equalsIgnoreCase("reload")) {
 					Utils.registerGuis();
 					sender.sendMessage(Utils.PREFIX + "Inventories reloaded.");
 				}

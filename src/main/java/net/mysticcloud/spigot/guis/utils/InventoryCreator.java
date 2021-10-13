@@ -27,11 +27,12 @@ public class InventoryCreator {
 	List<ItemStack> items = new LinkedList<>();
 	Map<Character, ItemStack> identifier = new LinkedHashMap<>();
 	Map<Character, JSONObject> metadata = new HashMap<>();
+	int size;
 
 	public InventoryCreator(String name, Player holder, int size) {
-		this.name = Utils.dependencyEnabled("placeholderapi") ? PlaceholderAPI.setPlaceholders(holder, name) : name;
+		this.name = Utils.setPlaceholders(holder, name);
 		this.holder = holder;
-		inv = Bukkit.createInventory(holder, size, Utils.colorize(name));
+		this.size = size;
 	}
 
 	public ItemStack addItem(Material mat, String name, char identifier) {
@@ -126,24 +127,23 @@ public class InventoryCreator {
 	}
 
 	public Inventory getInventory(Player player) {
+		inv = Bukkit.createInventory(holder, size, Utils.colorize(name));
 		int a = 0;
 		for (ItemStack i : items) {
 			if (player != null) {
-				if (Utils.dependencyEnabled("placeholderapi")) {
-					if (i.hasItemMeta()) {
-						ItemMeta im = i.getItemMeta();
-						if (im.hasDisplayName())
-							im.setDisplayName(PlaceholderAPI.setPlaceholders(player, im.getDisplayName()));
+				if (i.hasItemMeta()) {
+					ItemMeta im = i.getItemMeta();
+					if (im.hasDisplayName())
+						im.setDisplayName(Utils.setPlaceholders(player, im.getDisplayName()));
 
-						if (im.hasLore()) {
-							List<String> lore = new ArrayList<>();
-							for (String s : im.getLore()) {
-								lore.add(PlaceholderAPI.setPlaceholders(player, s));
-							}
-							im.setLore(lore);
+					if (im.hasLore()) {
+						List<String> lore = new ArrayList<>();
+						for (String s : im.getLore()) {
+							lore.add(Utils.setPlaceholders(player, s));
 						}
-						i.setItemMeta(im);
+						im.setLore(lore);
 					}
+					i.setItemMeta(im);
 				}
 			}
 
@@ -170,6 +170,10 @@ public class InventoryCreator {
 
 	public JSONObject getMetadata(char ch) {
 		return metadata.containsKey(ch) ? metadata.get(ch) : new JSONObject("{}");
+	}
+
+	public void setName(String name) {
+		this.name = Utils.colorize(name);
 	}
 
 	public Character getCharacter(ItemStack item) {

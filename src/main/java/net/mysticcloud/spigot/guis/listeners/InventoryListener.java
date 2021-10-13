@@ -73,16 +73,11 @@ public class InventoryListener implements Listener {
 								break;
 							case "command":
 								JSONObject command = json.getJSONObject("command");
-								Bukkit.dispatchCommand(
-										command.getString("sender").equalsIgnoreCase("player")
-												? (Player) e.getWhoClicked()
-												: Bukkit.getConsoleSender(),
-										Utils.dependencyEnabled("placeholderapi")
-												? PlaceholderAPI.setPlaceholders((Player) e.getWhoClicked(),
-														command.getString("command").replaceAll("%player%",
-																e.getWhoClicked().getName()))
-												: command.getString("command").replaceAll("%player%",
-														e.getWhoClicked().getName()));
+								String cmd = Utils.setPlaceholders((Player) e.getWhoClicked(), command
+										.getString("command").replaceAll("%player%", e.getWhoClicked().getName()));
+								Bukkit.dispatchCommand(command.getString("sender").equalsIgnoreCase("player")
+										? (Player) e.getWhoClicked()
+										: Bukkit.getConsoleSender(), cmd);
 								break;
 							}
 							Utils.getEconomy().withdrawPlayer((Player) e.getWhoClicked(), price);

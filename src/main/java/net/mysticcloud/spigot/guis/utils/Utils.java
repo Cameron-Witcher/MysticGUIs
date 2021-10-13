@@ -60,7 +60,8 @@ public class Utils {
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
-		deps.put("placeholderapi", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
+		deps.put("pa", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
+		deps.put("mvdwpa", Bukkit.getPluginManager().getPlugin("MVdWPlaceholderAPI") != null);
 
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
@@ -328,6 +329,18 @@ public class Utils {
 				}
 			}
 		System.out.println(log);
+	}
+
+	public static String setPlaceholders(Player player, String string) {
+		string = string.replaceAll("%player%", player.getName());
+		string = colorize(string);
+		if (dependencyEnabled("mvdwpa")) {
+			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
+		}
+		if (dependencyEnabled("pa")) {
+			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
+		}
+		return string;
 	}
 
 }

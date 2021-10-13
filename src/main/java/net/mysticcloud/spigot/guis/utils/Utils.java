@@ -1,12 +1,12 @@
 package net.mysticcloud.spigot.guis.utils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -48,9 +50,11 @@ public class Utils {
 
 	private static Map<String, Boolean> deps = new HashMap<>();
 
+	private static File guiFolder = null;
+
 	public static void init(JavaPlugin main) {
 		plugin = main;
-
+		guiFolder = new File(plugin.getDataFolder().getPath() + "/guis");
 		registerGuis();
 
 		deps.put("vault-econ", setupEconomy());
@@ -66,38 +70,46 @@ public class Utils {
 	public static void registerGuis() {
 		deps.clear();
 		guis.clear();
+		try {
 
-		if (plugin.getConfig().isSet("guis")) {
-			loadGuis();
-		} else {
+			if (!guiFolder.exists()) {
+				guiFolder.mkdir();
+				File example = new File(guiFolder.getParent() + "/example.yml");
+				example.createNewFile();
+				FileConfiguration fc = YamlConfiguration.loadConfiguration(example);
+				fc.set("guis.example.size", 27);
+				fc.set("guis.example.name", "Custom GUI");
+				fc.set("guis.example.items.X", "GRAY_STAINED_GLASS_PANE{\"name\":\"&7Choose an option.\"}");
+				fc.set("guis.example.items.A",
+						"DIAMOND_SWORD{\"name\":\"&6&lSurvival\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"survivalhub\"}");
+				fc.set("guis.example.items.B",
+						"GOLDEN_SHOVEL{\"name\":\"&a&lMiniGames\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"minigames\"}");
+				fc.set("guis.example.items.C",
+						"GRASS_BLOCK{\"name\":\"&b&lAdventure\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"adventure\"}");
+				fc.set("guis.example.items.D",
+						"CHEST{\"name\":\"&c&lSkyblock\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"skyblock\"}");
 
-			plugin.getConfig().set("guis.example.size", 27);
-			plugin.getConfig().set("guis.example.name", "Custom GUI");
-			plugin.getConfig().set("guis.example.items.X", "GRAY_STAINED_GLASS_PANE{\"name\":\"&7Choose an option.\"}");
-			plugin.getConfig().set("guis.example.items.A",
-					"DIAMOND_SWORD{\"name\":\"&6&lSurvival\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"survivalhub\"}");
-			plugin.getConfig().set("guis.example.items.B",
-					"GOLDEN_SHOVEL{\"name\":\"&a&lMiniGames\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"minigames\"}");
-			plugin.getConfig().set("guis.example.items.C",
-					"GRASS_BLOCK{\"name\":\"&b&lAdventure\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"adventure\"}");
-			plugin.getConfig().set("guis.example.items.D",
-					"CHEST{\"name\":\"&c&lSkyblock\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"skyblock\"}");
+				fc.set("guis.example.items.Y", "BARRIER{\"name\":\"&cClose menu\",\"action\":\"close_gui\"}");
 
-			plugin.getConfig().set("guis.example.items.Y",
-					"BARRIER{\"name\":\"&cClose menu\",\"action\":\"close_gui\"}");
+				List<String> c = new ArrayList<>();
+				c.add("XXXXXXXXX");
+				c.add("XAXBXCXDX");
+				c.add("XXXXYXXXX");
 
-			List<String> c = new ArrayList<>();
-			c.add("XXXXXXXXX");
-			c.add("XAXBXCXDX");
-			c.add("XXXXYXXXX");
+				fc.set("guis.example.config", c);
+				fc.save(example);
+			}
 
-			plugin.getConfig().set("guis.example.config", c);
-
-			plugin.saveConfig();
-
-			loadGuis();
-
+			for (File file : guiFolder.listFiles()) {
+				if (file.getName().toLowerCase().endsWith(".yml")) {
+					loadGuis(file);
+				}
+			}
+		} catch (IOException e) {
+			log(new AlertLog("There was an error registering guis."));
+			e.printStackTrace();
 		}
+
 	}
 
 	public static boolean limited() {
@@ -161,26 +173,28 @@ public class Utils {
 		return econ;
 	}
 
-	private static void loadGuis() {
-		log("Loading GUIs...");
+	private static void loadGuis(File file) {
+		FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+
+		log("Loading GUIs... (" + file.getName() + ")");
 		int x = 0;
-		for (String id : plugin.getConfig().getConfigurationSection("guis").getKeys(false)) {
+		for (String id : fc.getConfigurationSection("guis").getKeys(false)) {
 			if (x == MAX_LIMITED_GUIS && limited)
 				break;
 			log(" - Loading " + id + "...");
-			int size = plugin.getConfig().getInt("guis." + id + ".size", 9);
-			String sname = colorize(plugin.getConfig().getString("guis." + id + ".name", "Custom GUI"));
+			int size = fc.getInt("guis." + id + ".size", 9);
+			String sname = colorize(fc.getString("guis." + id + ".name", "Custom GUI"));
 			String array = "";
-			for (String s : plugin.getConfig().getStringList("guis." + id + ".config")) {
+			for (String s : fc.getStringList("guis." + id + ".config")) {
 				array = array + s;
 			}
 
 			InventoryCreator gui = new InventoryCreator(sname, null, size);
 			int i = 0;
-			for (String iid : plugin.getConfig().getConfigurationSection("guis." + id + ".items").getKeys(false)) {
+			for (String iid : fc.getConfigurationSection("guis." + id + ".items").getKeys(false)) {
 				log("  - Adding item: " + iid);
 				JSONObject json = new JSONObject("{}");
-				String name = plugin.getConfig().getString("guis." + id + ".items." + iid);
+				String name = fc.getString("guis." + id + ".items." + iid);
 				if (name.contains("{")) {
 					log("   - Configuring JSON (" + id + ":" + iid + ")...");
 					String data = "";

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.mysticcloud.spigot.guis.MysticPlugin;
+import net.mysticcloud.spigot.guis.commands.listeners.PlayerTabCompleter;
 import net.mysticcloud.spigot.guis.utils.Perm;
 import net.mysticcloud.spigot.guis.utils.Utils;
 
@@ -14,7 +15,7 @@ public class AdminCommands implements CommandExecutor {
 	public AdminCommands(JavaPlugin plugin, String... cmds) {
 		for (String cmd : cmds) {
 			plugin.getCommand(cmd).setExecutor(this);
-//			plugin.getCommand(cmd).setTabCompleter(new AdminTabCompleter());
+			plugin.getCommand(cmd).setTabCompleter(new PlayerTabCompleter());
 		}
 	}
 
@@ -27,8 +28,9 @@ public class AdminCommands implements CommandExecutor {
 					sender.sendMessage(Utils.colorize(Utils.PREFIX + "Below are all the avalible sub-commands"));
 					sender.sendMessage(Utils.colorize(
 							"/" + label + " update - Update the current jar automatically. (restart required)"));
-					sender.sendMessage(Utils.colorize(
-							"/" + label + " reload - Reloads and re-registers all inventories."));
+					sender.sendMessage(
+							Utils.colorize("/" + label + " reload - Reloads and re-registers all inventories."));
+					sender.sendMessage(Utils.colorize("/" + label + " list - List all the inventories."));
 					if (Utils.limited())
 						sender.sendMessage(Utils.colorize(
 								"/" + label + " setkey <license> - Set your license key to unlock the full version."));
@@ -39,6 +41,13 @@ public class AdminCommands implements CommandExecutor {
 						sender.sendMessage(Utils.colorize(Utils.PREFIX + "Successfully downloaded " + Utils.PLUGIN
 								+ ".jar. Please restart the server as soon as possible to avoid any fatal bugs"));
 					}
+				}
+				if (args[0].equalsIgnoreCase("list")) {
+					String s = "&f";
+					for (String a : Utils.getGuis().keySet()) {
+						s = s == "&f" ? a : s + "&7, &f" + a;
+					}
+					sender.sendMessage(Utils.colorize(Utils.PREFIX + "All registered inventories: " + s + "&7."));
 				}
 				if (args[0].equalsIgnoreCase("reload")) {
 					Utils.registerGuis();

@@ -74,7 +74,7 @@ public class Utils {
 
 			if (!guiFolder.exists()) {
 				guiFolder.mkdir();
-				File example = new File(guiFolder.getParent() + "/example.yml");
+				File example = new File(guiFolder.getPath() + "/example.yml");
 				example.createNewFile();
 				FileConfiguration fc = YamlConfiguration.loadConfiguration(example);
 				fc.set("guis.example.size", 27);

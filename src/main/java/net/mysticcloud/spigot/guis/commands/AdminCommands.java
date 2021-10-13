@@ -43,9 +43,9 @@ public class AdminCommands implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("list")) {
-					String s = "&f";
+					String s = "";
 					for (String a : Utils.getGuis().keySet()) {
-						s = s == "&f" ? a : s + "&7, &f" + a;
+						s = s == "" ? "&f" + a : s + "&7, &f" + a;
 					}
 					sender.sendMessage(Utils.colorize(Utils.PREFIX + "All registered inventories: " + s + "&7."));
 				}

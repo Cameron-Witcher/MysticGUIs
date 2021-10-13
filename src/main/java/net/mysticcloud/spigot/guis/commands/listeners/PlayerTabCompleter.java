@@ -24,6 +24,7 @@ public class PlayerTabCompleter implements TabCompleter {
 		guiCmds.add("reload");
 		guiCmds.add("update");
 		guiCmds.add("setkey");
+		guiCmds.add("list");
 	}
 
 	@Override

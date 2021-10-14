@@ -26,7 +26,6 @@ SOFTWARE.
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
@@ -39,7 +38,6 @@ import java.util.Iterator;
  * @author JSON.org
  * @version 2016-08-10
  */
-@SuppressWarnings("boxing")
 public class XML {
 
     /** The Character '&amp;'. */

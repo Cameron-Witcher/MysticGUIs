@@ -1,13 +1,14 @@
-package net.mysticcloud.spigot.guis.utils;
+package net.mysticcloud.spigot.guis.utils.gui;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import net.mysticcloud.spigot.guis.utils.Utils;
 
 public class GuiManager {
 
@@ -17,12 +18,11 @@ public class GuiManager {
 
 	public static boolean init() {
 		if (!init) {
-			InventoryCreator inv = new InventoryCreator(Utils.colorize("&7Waiting..."), null, 9);
-
-			inv.addItem(Material.GRAY_STAINED_GLASS_PANE, "Waiting...", 'X');
-
-			inv.setConfiguration(new char[] { 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X' });
-			waitingInv = inv.getInventory();
+			GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
+			GuiItem item = new GuiItem("X");
+			item.setDisplayName("&7Waiting...");
+			gui.addItem("X", item);
+			waitingInv = gui.getInventory(null);
 			init = true;
 		}
 		return init;

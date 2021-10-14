@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json2.JSONArray;
 import org.json2.JSONObject;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -29,6 +32,9 @@ import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import net.mysticcloud.spigot.guis.utils.gui.GuiInventory;
+import net.mysticcloud.spigot.guis.utils.gui.GuiItem;
+import net.mysticcloud.spigot.guis.utils.gui.GuiManager;
 import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
 import net.mysticcloud.spigot.guis.utils.logs.Log;
 
@@ -40,7 +46,7 @@ public class Utils {
 
 	static JavaPlugin plugin = null;
 
-	private static Map<String, InventoryCreator> guis = new HashMap<>();
+	private static Map<String, GuiInventory> guis = new HashMap<>();
 
 	private static Economy econ;
 	private static Permission perms;
@@ -75,30 +81,7 @@ public class Utils {
 
 			if (!guiFolder.exists()) {
 				guiFolder.mkdir();
-				File example = new File(guiFolder.getPath() + "/example.yml");
-				example.createNewFile();
-				FileConfiguration fc = YamlConfiguration.loadConfiguration(example);
-				fc.set("guis.example.size", 27);
-				fc.set("guis.example.name", "Custom GUI");
-				fc.set("guis.example.items.X", "GRAY_STAINED_GLASS_PANE{\"name\":\"&7Choose an option.\"}");
-				fc.set("guis.example.items.A",
-						"DIAMOND_SWORD{\"name\":\"&6&lSurvival\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"survivalhub\"}");
-				fc.set("guis.example.items.B",
-						"GOLDEN_SHOVEL{\"name\":\"&a&lMiniGames\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"minigames\"}");
-				fc.set("guis.example.items.C",
-						"GRASS_BLOCK{\"name\":\"&b&lAdventure\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"adventure\"}");
-				fc.set("guis.example.items.D",
-						"CHEST{\"name\":\"&c&lSkyblock\",\"lore\":[\"&f\",\"&fClick to join\"],\"action\":\"join_server\",\"server\":\"skyblock\"}");
-
-				fc.set("guis.example.items.Y", "BARRIER{\"name\":\"&cClose menu\",\"action\":\"close_gui\"}");
-
-				List<String> c = new ArrayList<>();
-				c.add("XXXXXXXXX");
-				c.add("XAXBXCXDX");
-				c.add("XXXXYXXXX");
-
-				fc.set("guis.example.config", c);
-				fc.save(example);
+				exportResource("examples.yml");
 			}
 
 			for (File file : guiFolder.listFiles()) {
@@ -106,7 +89,7 @@ public class Utils {
 					loadGuis(file);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log(new AlertLog("There was an error registering guis."));
 			e.printStackTrace();
 		}
@@ -179,53 +162,81 @@ public class Utils {
 
 		log("Loading GUIs... (" + file.getName() + ")");
 		int x = 0;
-		for (String id : fc.getConfigurationSection("guis").getKeys(false)) {
+		for (String name : fc.getConfigurationSection("guis").getKeys(false)) {
 			if (x == MAX_LIMITED_GUIS && limited)
 				break;
-			log(" - Loading " + id + "...");
-			int size = fc.getInt("guis." + id + ".size", 9);
-			String sname = colorize(fc.getString("guis." + id + ".name", "Custom GUI"));
+			log(" - Loading " + name + "...");
+			int size = fc.getInt("guis." + name + ".size", 9);
+			String sname = colorize(fc.getString("guis." + name + ".name", "Custom GUI"));
 			String array = "";
-			for (String s : fc.getStringList("guis." + id + ".config")) {
+			for (String s : fc.getStringList("guis." + name + ".config")) {
 				array = array + s;
 			}
-
-			InventoryCreator gui = new InventoryCreator(sname, null, size);
-			int i = 0;
-			for (String iid : fc.getConfigurationSection("guis." + id + ".items").getKeys(false)) {
+			GuiInventory gui = new GuiInventory(name, sname, size, array);
+			for (String iid : fc.getConfigurationSection("guis." + name + ".items").getKeys(false)) {
 				log("  - Adding item: " + iid);
-				JSONObject json = new JSONObject("{}");
-				String name = fc.getString("guis." + id + ".items." + iid);
-				if (name.contains("{")) {
-					log("   - Configuring JSON (" + id + ":" + iid + ")...");
-					String data = "";
-					for (int a = name.indexOf("{"); a != name.length(); a++) {
-						data = data + name.charAt(a);
-					}
-					String tmp = "";
+				GuiItem item = new GuiItem(iid);
+				if (fc.isSet("guis." + name + ".items." + iid + ".name"))
+					item.setDisplayName(fc.getString("guis." + name + ".items." + iid + ".name"));
+				if (fc.isSet("guis." + name + ".items." + iid + ".name"))
+					item.setMaterial(
+							Material.valueOf(fc.getString("guis." + name + ".items." + iid + ".name").toUpperCase()));
+				if (fc.isSet("guis." + name + ".items." + iid + ".lore"))
+					item.setLore(fc.getStringList("guis." + name + ".items." + iid + ".lore"));
+				if (fc.isSet("guis." + name + ".items." + iid + ".buy"))
+					item.setBuyPrice(fc.getString("guis." + name + ".items." + iid + ".buy"));
+				if (fc.isSet("guis." + name + ".items." + iid + ".sell"))
+					item.setSellPrice(fc.getString("guis." + name + ".items." + iid + ".sell"));
 
-					for (int a = 0; a != name.indexOf("{"); a++) {
-						tmp = tmp + name.charAt(a);
-					}
-					name = tmp;
-					json = new JSONObject(data);
+				if (fc.isSet("guis." + name + ".items." + iid + ".action")) {
+					item.setSingleAction(true);
+					JSONObject json = new JSONObject("{}");
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.action"))
+						json.put("action", fc.getString("guis." + name + ".items." + iid + ".action.action"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.server"))
+						json.put("server", fc.getString("guis." + name + ".items." + iid + ".action.server"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.item"))
+						json.put("item", fc.getString("guis." + name + ".items." + iid + ".action.item"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.amount"))
+						json.put("amount", fc.getString("guis." + name + ".items." + iid + ".action.amount"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.message"))
+						json.put("message", fc.getString("guis." + name + ".items." + iid + ".action.message"));
+					item.setSingleAction(json);
 				}
-				List<String> lore = null;
-				if (json.has("lore")) {
-					lore = new ArrayList<>();
-					for (Object s : json.getJSONArray("lore").toList()) {
-						lore.add(colorize((String) s));
+
+				if (fc.isSet("guis." + name + ".items." + iid + ".actions")) {
+					item.setSingleAction(false);
+					JSONArray actions = new JSONArray();
+					String key = "guis." + name + ".items." + iid + ".actions";
+					for (String clickAction : fc.getConfigurationSection("guis." + name + ".items." + iid + ".actions")
+							.getKeys(false)) {
+						for (String a : fc
+								.getConfigurationSection("guis." + name + ".items." + iid + ".actions." + clickAction)
+								.getKeys(false)) {
+							JSONObject action = new JSONObject("{}");
+							action.put("click", clickAction);
+							if (fc.isSet(key + "." + a + ".action"))
+								action.put("action", fc.getString(key + "." + a + ".action"));
+							if (fc.isSet(key + "." + a + ".server"))
+								action.put("action", fc.getString(key + "." + a + ".server"));
+							if (fc.isSet(key + "." + a + ".item"))
+								action.put("action", fc.getString(key + "." + a + ".item"));
+							if (fc.isSet(key + "." + a + ".amount"))
+								action.put("action", fc.getString(key + "." + a + ".amount"));
+							if (fc.isSet(key + "." + a + ".message"))
+								action.put("action", fc.getString(key + "." + a + ".message"));
+							actions.put(action);
+						}
 					}
+					item.setActions(actions);
 				}
-				gui.addItem(Material.valueOf(name.toUpperCase()),
-						json.has("name") ? json.getString("name") : name.toUpperCase(), iid.charAt(0), lore, true,
-						false, (short) 0, json);
-				i = i + 1;
+
+				gui.addItem(item.getIdentifier(), item);
+
 			}
-			gui.setConfiguration(array.toCharArray());
 
-			guis.put(id, gui);
-			log("Successfully loaded " + id);
+			guis.put(name, gui);
+			log("Successfully loaded " + name);
 			x = x + 1;
 		}
 	}
@@ -246,7 +257,7 @@ public class Utils {
 		return ret;
 	}
 
-	public static Map<String, InventoryCreator> getGuis() {
+	public static Map<String, GuiInventory> getGuis() {
 		return guis;
 	}
 
@@ -341,6 +352,91 @@ public class Utils {
 			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
 		}
 		return string;
+	}
+
+	public static boolean processAction(Player player, GuiItem item, JSONObject action) {
+
+		switch (action.getString("action").toLowerCase()) {
+		case "send_message":
+			player.sendMessage(colorize(action.getString("message")));
+			return true;
+		case "open_gui":
+			try {
+				GuiManager.openInventory(player, Utils.getGuis().get(action.getString("gui")).getInventory(player),
+						action.getString("gui"));
+			} catch (NullPointerException ex) {
+				player.sendMessage(Utils.PREFIX + "There was an error opening that GUI. Does it exist?");
+			}
+			return true;
+		case "join_server":
+			Utils.sendPluginMessage(player, "BungeeCord", "Connect", action.getString("server"));
+			return true;
+		case "buy":
+			int amount = action.has("amount") ? Integer.parseInt(action.getString("amount")) : 1;
+			double price = item.getBuyPrice() * amount;
+			if (Utils.getEconomy().has(player, price)) {
+				if (action.has("item")) {
+					if (action.getString("item").startsWith("CustomItem:")) {
+
+					} else {
+						ItemStack i = new ItemStack(Material.valueOf(action.getString("item").toUpperCase()));
+						player.getInventory().addItem(i);
+					}
+				}
+				if (action.has("command")) {
+					String sender = action.has("sender") ? action.getString("sender") : "player";
+					String cmd = Utils.setPlaceholders(player, action.getString("command"));
+					Bukkit.dispatchCommand(sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player,
+							cmd);
+				}
+				Utils.getEconomy().withdrawPlayer(player, price);
+				return true;
+			} else {
+				return false;
+			}
+		case "command":
+			String sender = action.has("sender") ? action.getString("sender") : "player";
+			String cmd = Utils.setPlaceholders(player, action.getString("command"));
+			Bukkit.dispatchCommand(sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player, cmd);
+			return true;
+		case "close_gui":
+			player.closeInventory();
+			return true;
+		}
+		log("Could not process action. Stopping.");
+		return false;
+
+	}
+
+	private static String exportResource(String resourceName) throws Exception {
+		InputStream stream = null;
+		OutputStream resStreamOut = null;
+		String jarFolder;
+		try {
+			stream = plugin.getClass().getResourceAsStream(resourceName);// note that each / is a directory down in the
+																			// "jar tree" been the jar the root of the
+																			// tree
+			if (stream == null) {
+				throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
+			}
+
+			int readBytes;
+			byte[] buffer = new byte[4096];
+			jarFolder = new File(
+					plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
+							.getParentFile().getPath().replace('\\', '/');
+			resStreamOut = new FileOutputStream(jarFolder + resourceName);
+			while ((readBytes = stream.read(buffer)) > 0) {
+				resStreamOut.write(buffer, 0, readBytes);
+			}
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			stream.close();
+			resStreamOut.close();
+		}
+
+		return jarFolder + resourceName;
 	}
 
 }

@@ -1,0 +1,94 @@
+guis:
+   server_menu:
+      name: '&a&lServer Selector'
+      size: 27
+      items:
+         X:
+            type: GRAY_STAINED_GLASS_PANE
+            name: '&7Choose an option'
+         A:
+            type: GRASS_BLOCK
+            name: '&a&lSurvival Server'
+            lore:
+            - '&a&l%bungee_Survival%&f players online'
+            - '&fClick to join'
+            action:
+               action: join_server
+               server: Survival
+         B:
+            type: IRON_BARS
+            name: '&e&lPrison Server'
+            lore:
+            - '&a&l%bungee_Prison%&f players online'
+            - '&fClick to join'
+            action:
+               action: join_server
+               server: Prison
+         C:
+            type: DIAMOND_BLOCK
+            name: '&b&lCreative Server'
+            lore:
+            - '&a&l%bungee_Creative%&f players online'
+            - '&fClick to join'
+            action:
+               action: join_server
+               server: Creative
+         D:
+            type: SLIME_BLOCK
+            name: '&c&lMinigames Server'
+            lore:
+            - '&a&l%bungee_Minigames%&f players online'
+            - '&fClick to join'
+            action:
+               action: join_server
+               server: Minigames
+      config:
+      - XXXXXXXXX
+      - XAXBXCXDX
+      - XXXXYXXXX
+   shop:
+      name: '&6&lShop&8&l:'
+      size: 27
+      items:
+         A:
+            type: GRASS_BLOCK
+            name: Grass Block
+            lore:
+            - '&7'
+            - '&aRight Click to buy:'
+            - '&f$100'
+            - '&eLeft Click to sell:'
+            - '&f$98'
+            buy: 100
+            sell: 98
+            actions:
+               RIGHT_CLICK:
+                  action1:
+                     action: buy
+                     item: GRASS_BLOCK
+                  action2:
+                     action: send_message
+                     message: You bought a GRASS BLOCK!
+               SHIFT_RIGHT_CLICK:
+                  action1:
+                     action: buy
+                     command: give %player% minecraft:grass_block 64
+                     amount: 64
+                  action2:
+                     action: send_message
+                     message: You bought 64 GRASS BLOCKS!
+               LEFT_CLICK:
+                  action1:
+                     action: sell
+                     item: GRASS_BLOCK
+                  action2:
+                     action: send_message
+                     message: You sold a GRASS BLOCK!
+               SHIFT_LEFT_CLICK:
+                  action1:
+                     action: sell
+                     item: GRASS_BLOCK
+                     amount: 64
+                  action2:
+                     action: send_message
+                     message: You sold 64 GRASS BLOCKS!

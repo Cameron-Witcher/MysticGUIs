@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.mysticcloud.spigot.guis.commands.listeners.PlayerTabCompleter;
-import net.mysticcloud.spigot.guis.utils.GuiManager;
 import net.mysticcloud.spigot.guis.utils.Perm;
 import net.mysticcloud.spigot.guis.utils.Utils;
+import net.mysticcloud.spigot.guis.utils.gui.GuiManager;
 
 public class PlayerCommands implements CommandExecutor {
 

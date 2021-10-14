@@ -81,7 +81,51 @@ public class Utils {
 
 			if (!guiFolder.exists()) {
 				guiFolder.mkdir();
-				exportResource("examples.yml");
+				InputStream in = null;
+				FileOutputStream out = null;
+
+				try {
+
+					URL myUrl = new URL("https://downloads.mysticcloud.net/MysticGuis/examples.yml");
+					HttpURLConnection conn = (HttpURLConnection) myUrl.openConnection();
+					conn.setDoOutput(true);
+					conn.setReadTimeout(30000);
+					conn.setConnectTimeout(30000);
+					conn.setUseCaches(false);
+					conn.setAllowUserInteraction(false);
+					conn.setRequestProperty("Content-Type", "application/json");
+					conn.setRequestProperty("Accept-Charset", "UTF-8");
+					conn.setRequestMethod("GET");
+					in = conn.getInputStream();
+					out = new FileOutputStream("plugins/" + PLUGIN + "/guis/examples.yml");
+					int c;
+					byte[] b = new byte[1024];
+					while ((c = in.read(b)) != -1)
+						out.write(b, 0, c);
+
+				}
+
+				catch (Exception ex) {
+					log(new AlertLog("There was an error updating. Check console for details."));
+					ex.printStackTrace();
+				}
+
+				finally {
+					if (in != null)
+						try {
+							in.close();
+						} catch (IOException e) {
+							log(new AlertLog("There was an error updating. Check console for details."));
+							e.printStackTrace();
+						}
+					if (out != null)
+						try {
+							out.close();
+						} catch (IOException e) {
+							log(new AlertLog("There was an error updating. Check console for details."));
+							e.printStackTrace();
+						}
+				}
 			}
 
 			for (File file : guiFolder.listFiles()) {

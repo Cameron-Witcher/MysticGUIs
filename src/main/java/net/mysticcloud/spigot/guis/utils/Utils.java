@@ -61,14 +61,14 @@ public class Utils {
 	public static void init(JavaPlugin main) {
 		plugin = main;
 		guiFolder = new File(plugin.getDataFolder().getPath() + "/guis");
-		registerGuis();
+		
 
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
 		deps.put("pa", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
 		deps.put("mvdwpa", Bukkit.getPluginManager().getPlugin("MVdWPlaceholderAPI") != null);
-
+		registerGuis();
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 

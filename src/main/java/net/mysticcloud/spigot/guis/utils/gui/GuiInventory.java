@@ -48,23 +48,22 @@ public class GuiInventory {
 	public Inventory getInventory(Player player) {
 		Inventory inv = Bukkit.createInventory(player, size, Utils.colorize(name));
 		for (int i = 0; i != config.length(); i++) {
-			char key = config.charAt(i);
+			String key = config.substring(i, i + 1);
 			inv.setItem(i, getGuiItem(key).getItem(player));
 		}
 		return inv;
 	}
 
-	public GuiItem getGuiItem(char key) {
-		return items.get(key + "");
+	public GuiItem getGuiItem(String key) {
+		return items.get(key);
 	}
 
-	public Character getKey(ItemStack item, Player player) {
-		Character c = null;
+	public String getKey(ItemStack item, Player player) {
 		for (Entry<String, GuiItem> e : items.entrySet()) {
 			if (e.getValue().getItem(player).equals(item))
-				c = e.getKey().charAt(0);
+				return e.getKey();
 		}
-		return c;
+		return "";
 	}
 
 	public boolean hasItem(ItemStack item, Player player) {

@@ -416,6 +416,7 @@ public class Utils {
 			if (player.getInventory().contains(t)) {
 				player.getInventory().remove(t);
 				Utils.getEconomy().depositPlayer(player, item.getSellPrice());
+				return true;
 			} else
 				return false;
 		case "send_message":
@@ -436,6 +437,7 @@ public class Utils {
 			int amount = action.has("amount") ? Integer.parseInt(action.getString("amount")) : 1;
 			double price = item.getBuyPrice() * amount;
 			if (Utils.getEconomy().has(player, price)) {
+				Utils.getEconomy().withdrawPlayer(player, price);
 				if (action.has("item")) {
 					if (action.getString("item").startsWith("CustomItem:")) {
 
@@ -447,14 +449,13 @@ public class Utils {
 				if (action.has("command")) {
 					String sender = action.has("sender") ? action.getString("sender") : "player";
 					String cmd = Utils.setPlaceholders(player, action.getString("command"));
-					Bukkit.dispatchCommand(sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player,
+					Bukkit.dispatchCommand(
+							sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player,
 							cmd);
 				}
-				Utils.getEconomy().withdrawPlayer(player, price);
 				return true;
-			} else {
+			} else 
 				return false;
-			}
 		case "command":
 			String sender = action.has("sender") ? action.getString("sender") : "player";
 			String cmd = Utils.setPlaceholders(player, action.getString("command"));
@@ -465,38 +466,5 @@ public class Utils {
 			return true;
 		}
 		return false;
-
 	}
-
-	private static String exportResource(String resourceName) throws Exception {
-		InputStream stream = null;
-		OutputStream resStreamOut = null;
-		String jarFolder;
-		try {
-			stream = plugin.getClass().getResourceAsStream(resourceName);// note that each / is a directory down in the
-																			// "jar tree" been the jar the root of the
-																			// tree
-			if (stream == null) {
-				throw new Exception("Cannot get resource \"" + resourceName + "\" from Jar file.");
-			}
-
-			int readBytes;
-			byte[] buffer = new byte[4096];
-			jarFolder = new File(
-					plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath())
-							.getParentFile().getPath().replace('\\', '/');
-			resStreamOut = new FileOutputStream(jarFolder + resourceName);
-			while ((readBytes = stream.read(buffer)) > 0) {
-				resStreamOut.write(buffer, 0, readBytes);
-			}
-		} catch (Exception ex) {
-			throw ex;
-		} finally {
-			stream.close();
-			resStreamOut.close();
-		}
-
-		return jarFolder + resourceName;
-	}
-
 }

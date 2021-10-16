@@ -97,11 +97,13 @@ public class GuiItem {
 		if (storedItem == null) {
 			ItemStack item = new ItemStack(mat);
 			ItemMeta meta = item.getItemMeta();
-			List<String> tmp = new ArrayList<>();
-			for (String a : lore) {
-				tmp.add(Utils.setPlaceholders(player, a));
+			if (lore != null) {
+				List<String> tmp = new ArrayList<>();
+				for (String a : lore) {
+					tmp.add(Utils.setPlaceholders(player, a));
+				}
+				meta.setLore(tmp);
 			}
-			meta.setLore(tmp);
 			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
 			item.setItemMeta(meta);
 			this.storedItem = item;

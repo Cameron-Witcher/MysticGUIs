@@ -42,6 +42,7 @@ public class GuiInventory {
 	}
 
 	public void addItem(String identifier, GuiItem item) {
+		Utils.log("Gui " + name + ": Adding item " + identifier);
 		items.put(identifier, item);
 	}
 
@@ -49,6 +50,7 @@ public class GuiInventory {
 		Inventory inv = Bukkit.createInventory(player, size, Utils.colorize(name));
 		for (int i = 0; i != config.length(); i++) {
 			String key = config.substring(i, i + 1);
+			Utils.log("Getting item '" + key + "'");
 			inv.setItem(i, getGuiItem(key).getItem(player));
 		}
 		return inv;

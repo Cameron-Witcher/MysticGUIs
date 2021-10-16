@@ -49,6 +49,7 @@ public class InventoryListener implements Listener {
 					} else {
 						item.getActions().forEach(a -> {
 							JSONObject action = (JSONObject) a;
+							Utils.log(action.toString());
 							if (e.getClick().equals(ClickType
 									.valueOf(action.getString("click").toUpperCase().replaceAll("_CLICK", "")))) {
 								if (!Utils.processAction((Player) e.getWhoClicked(), item, action))

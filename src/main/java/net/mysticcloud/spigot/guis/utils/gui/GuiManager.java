@@ -14,21 +14,6 @@ import net.mysticcloud.spigot.guis.utils.Utils;
 public class GuiManager {
 
 	private static Map<UUID, String> invTracker = new HashMap<>();
-	private static Inventory waitingInv = null;
-	private static boolean init = false;
-
-	public static boolean init() {
-		if (!init) {
-			GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
-			GuiItem item = new GuiItem("X");
-			item.setDisplayName("&7Waiting...");
-			gui.addItem("X", item);
-			waitingInv = gui.getInventory(null);
-			init = true;
-		}
-		return init;
-
-	}
 
 	public static void openInventory(Player player, Inventory inventory, String title) {
 		if (inventory == null)
@@ -48,11 +33,13 @@ public class GuiManager {
 	public static void switchInventory(Player player, Inventory inventory, String title) {
 		if (inventory == null)
 			return;
-		if (waitingInv == null) {
-			init();
-		}
+
+		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
+		GuiItem item = new GuiItem("X");
+		item.setDisplayName("&7Waiting...");
+		gui.addItem("X", item);
 		player.setMetadata("switchinv", new FixedMetadataValue(Utils.getPlugin(), "yup"));
-		player.openInventory(waitingInv);
+		player.openInventory(gui.getInventory(player));
 		invTracker.put(player.getUniqueId(), "waiting");
 		Bukkit.getScheduler().runTaskLater(Utils.getPlugin(), new Runnable() {
 

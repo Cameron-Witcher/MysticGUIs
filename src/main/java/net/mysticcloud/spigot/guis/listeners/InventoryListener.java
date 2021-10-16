@@ -47,15 +47,15 @@ public class InventoryListener implements Listener {
 					if (item.isSingleAction()) {
 						Utils.processAction((Player) e.getWhoClicked(), item, item.getAction());
 					} else {
-						item.getActions().forEach(a -> {
-							JSONObject action = (JSONObject) a;
+						for (int i = 0; i < item.getActions().length(); i++) {
+							JSONObject action = item.getActions().getJSONObject(i);
 							if (e.getClick().equals(ClickType
 									.valueOf(action.getString("click").toUpperCase().replaceAll("_CLICK", "")))) {
 								Utils.log(action.toString());
 								if (!Utils.processAction((Player) e.getWhoClicked(), item, action))
-									return;
+									break;
 							}
-						});
+						}
 					}
 				}
 			}

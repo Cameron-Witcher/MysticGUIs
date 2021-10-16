@@ -270,7 +270,7 @@ public class Utils {
 							if (fc.isSet(key + "." + a + ".server"))
 								action.put("server", fc.getString(key + "." + a + ".server"));
 							if (fc.isSet(key + "." + a + ".item"))
-								action.put(".item", fc.getString(key + "." + a + ".item"));
+								action.put("item", fc.getString(key + "." + a + ".item"));
 							if (fc.isSet(key + "." + a + ".amount"))
 								action.put("amount", fc.getString(key + "." + a + ".amount"));
 							if (fc.isSet(key + "." + a + ".message"))

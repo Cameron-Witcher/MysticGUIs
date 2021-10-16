@@ -42,6 +42,11 @@ guis:
             action:
                action: join_server
                server: Minigames
+         Y:
+            type: BARRIER
+            name: '&4Close Menu'
+            action:
+               action: close_gui
       config:
       - XXXXXXXXX
       - XAXBXCXDX
@@ -92,3 +97,10 @@ guis:
                   action2:
                      action: send_message
                      message: You sold 64 GRASS BLOCKS!
+         X:
+            type: GRAY_STAINED_GLASS_PANE
+            name: '&7Choose an option'
+      config:
+      - AXXXXXXXX
+      - XXXXXXXXX
+      - XXXXXXXXX

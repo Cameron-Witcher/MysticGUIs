@@ -52,8 +52,10 @@ public class InventoryListener implements Listener {
 							if (e.getClick().equals(ClickType
 									.valueOf(action.getString("click").toUpperCase().replaceAll("_CLICK", "")))) {
 								Utils.log(action.toString());
-								if (!Utils.processAction((Player) e.getWhoClicked(), item, action))
+								if (!Utils.processAction((Player) e.getWhoClicked(), item, action)) {
+									Utils.log("Could not process action. Stopping.");
 									break;
+								}
 							}
 						}
 					}

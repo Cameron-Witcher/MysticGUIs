@@ -455,7 +455,6 @@ public class Utils {
 			player.closeInventory();
 			return true;
 		}
-		log("Could not process action. Stopping.");
 		return false;
 
 	}

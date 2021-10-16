@@ -449,12 +449,11 @@ public class Utils {
 				if (action.has("command")) {
 					String sender = action.has("sender") ? action.getString("sender") : "player";
 					String cmd = Utils.setPlaceholders(player, action.getString("command"));
-					Bukkit.dispatchCommand(
-							sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player,
+					Bukkit.dispatchCommand(sender.equalsIgnoreCase("CONSOLE") ? Bukkit.getConsoleSender() : player,
 							cmd);
 				}
 				return true;
-			} else 
+			} else
 				return false;
 		case "command":
 			String sender = action.has("sender") ? action.getString("sender") : "player";
@@ -465,6 +464,8 @@ public class Utils {
 			player.closeInventory();
 			return true;
 		}
+		if (action.has("error_message"))
+			player.sendMessage(Utils.setPlaceholders(player, action.getString("error_message")));
 		return false;
 	}
 }

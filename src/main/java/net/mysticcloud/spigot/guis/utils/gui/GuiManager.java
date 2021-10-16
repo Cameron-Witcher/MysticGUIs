@@ -34,12 +34,9 @@ public class GuiManager {
 		if (inventory == null)
 			return;
 
-		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
-		GuiItem item = new GuiItem("X");
-		item.setDisplayName("&7Waiting...");
-		gui.addItem("X", item);
+		
 		player.setMetadata("switchinv", new FixedMetadataValue(Utils.getPlugin(), "yup"));
-		player.openInventory(gui.getInventory(player));
+		player.openInventory(Utils.getGuis().get("waiting").getInventory(player));
 		invTracker.put(player.getUniqueId(), "waiting");
 		Bukkit.getScheduler().runTaskLater(Utils.getPlugin(), new Runnable() {
 

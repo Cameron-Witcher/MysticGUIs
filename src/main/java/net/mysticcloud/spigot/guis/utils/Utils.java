@@ -61,13 +61,13 @@ public class Utils {
 	public static void init(JavaPlugin main) {
 		plugin = main;
 		guiFolder = new File(plugin.getDataFolder().getPath() + "/guis");
-		
 
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
 		deps.put("pa", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
 		deps.put("mvdwpa", Bukkit.getPluginManager().getPlugin("MVdWPlaceholderAPI") != null);
+
 		registerGuis();
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
@@ -77,6 +77,11 @@ public class Utils {
 	public static void registerGuis() {
 		deps.clear();
 		guis.clear();
+		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
+		GuiItem item = new GuiItem("X");
+		item.setDisplayName("&7Waiting...");
+		gui.addItem("X", item);
+		guis.put("waiting", gui);
 		try {
 
 			if (!guiFolder.exists()) {

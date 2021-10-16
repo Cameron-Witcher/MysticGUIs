@@ -409,6 +409,15 @@ public class Utils {
 	public static boolean processAction(Player player, GuiItem item, JSONObject action) {
 
 		switch (action.getString("action").toLowerCase()) {
+		case "sell":
+			ItemStack t = item.getItem(player);
+			if (action.has("amount"))
+				t.setAmount(Integer.parseInt(action.getString("amount")));
+			if (player.getInventory().contains(t)) {
+				player.getInventory().remove(t);
+				Utils.getEconomy().depositPlayer(player, item.getSellPrice());
+			} else
+				return false;
 		case "send_message":
 			player.sendMessage(colorize(action.getString("message")));
 			return true;

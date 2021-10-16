@@ -256,12 +256,13 @@ public class Utils {
 				if (fc.isSet("guis." + name + ".items." + iid + ".actions")) {
 					item.setSingleAction(false);
 					JSONArray actions = new JSONArray();
-					String key = "guis." + name + ".items." + iid + ".actions";
+
 					for (String clickAction : fc.getConfigurationSection("guis." + name + ".items." + iid + ".actions")
 							.getKeys(false)) {
 						for (String a : fc
 								.getConfigurationSection("guis." + name + ".items." + iid + ".actions." + clickAction)
 								.getKeys(false)) {
+							String key = "guis." + name + ".items." + iid + ".actions." + clickAction;
 							JSONObject action = new JSONObject("{}");
 							action.put("click", clickAction);
 							if (fc.isSet(key + "." + a + ".action"))

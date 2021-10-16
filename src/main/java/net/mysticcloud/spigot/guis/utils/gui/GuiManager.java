@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import net.mysticcloud.spigot.guis.utils.Utils;
 
@@ -50,6 +51,7 @@ public class GuiManager {
 		if (waitingInv == null) {
 			init();
 		}
+		player.setMetadata("switchinv", new FixedMetadataValue(Utils.getPlugin(), "yup"));
 		player.openInventory(waitingInv);
 		invTracker.put(player.getUniqueId(), "waiting");
 		Bukkit.getScheduler().runTaskLater(Utils.getPlugin(), new Runnable() {
@@ -58,6 +60,7 @@ public class GuiManager {
 			public void run() {
 				player.openInventory(inventory);
 				invTracker.put(player.getUniqueId(), title);
+				player.removeMetadata("switchinv", Utils.getPlugin());
 			}
 
 		}, 5);

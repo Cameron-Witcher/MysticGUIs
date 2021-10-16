@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json2.JSONObject;
 
@@ -20,9 +21,16 @@ public class InventoryListener implements Listener {
 	}
 
 	@EventHandler
+	public void onPlayerCloseInventory(InventoryCloseEvent e) {
+		if (!e.getPlayer().hasMetadata("switchinv")) {
+			GuiManager.closeInventory((Player) e.getPlayer());
+		}
+	}
+
+	@EventHandler
 	public void onPlayerInventory(InventoryClickEvent e) {
 
-		if (Utils.getGuis().containsKey((GuiManager.getOpenInventory((Player) e.getWhoClicked())))) {
+		if (((Utils.getGuis().containsKey(GuiManager.getOpenInventory((Player) e.getWhoClicked()))))) {
 			e.setCancelled(true);
 			if (e.getCurrentItem() == null)
 				return;

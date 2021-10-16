@@ -108,7 +108,7 @@ public class GuiItem {
 			item.setItemMeta(meta);
 			this.storedItem = item;
 		}
-		return this.storedItem;
+		return this.storedItem.clone();
 	}
 
 	public boolean hasAction() {

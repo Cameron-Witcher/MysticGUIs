@@ -227,9 +227,17 @@ public class Utils {
 				GuiItem item = new GuiItem(iid);
 				if (fc.isSet("guis." + name + ".items." + iid + ".name"))
 					item.setDisplayName(fc.getString("guis." + name + ".items." + iid + ".name"));
-				if (fc.isSet("guis." + name + ".items." + iid + ".type"))
-					item.setMaterial(
-							Material.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));
+				if (fc.isSet("guis." + name + ".items." + iid + ".type")) {
+					String type = fc.getString("guis." + name + ".items." + iid + ".type");
+					if (type.startsWith("PlayerSkull:")) {
+						item.setPlayerSkull(type.split(":")[1]);
+					} else if (type.startsWith("CustomItem:")) {
+
+					} else
+						item.setMaterial(Material
+								.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));
+				}
+
 				if (fc.isSet("guis." + name + ".items." + iid + ".lore"))
 					item.setLore(fc.getStringList("guis." + name + ".items." + iid + ".lore"));
 				if (fc.isSet("guis." + name + ".items." + iid + ".buy"))

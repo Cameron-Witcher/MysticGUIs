@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.json2.JSONArray;
 import org.json2.JSONObject;
 
+import net.mysticcloud.spigot.guis.utils.PlayerSkull;
 import net.mysticcloud.spigot.guis.utils.Utils;
 
 public class GuiItem {
@@ -24,6 +25,8 @@ public class GuiItem {
 	JSONArray actions = new JSONArray();
 	boolean does_action = false;
 	ItemStack storedItem = null;
+	boolean playerSkull = false;
+	PlayerSkull skull = null;
 
 	public GuiItem(String id) {
 		this.id = id;
@@ -95,24 +98,33 @@ public class GuiItem {
 
 	public ItemStack getItem(Player player) {
 		if (storedItem == null) {
-			ItemStack item = new ItemStack(mat);
-			ItemMeta meta = item.getItemMeta();
-			if (lore != null) {
-				List<String> tmp = new ArrayList<>();
-				for (String a : lore) {
-					tmp.add(Utils.setPlaceholders(player, a));
+			if (!playerSkull) {
+				ItemStack item = new ItemStack(mat);
+				ItemMeta meta = item.getItemMeta();
+				if (lore != null) {
+					List<String> tmp = new ArrayList<>();
+					for (String a : lore) {
+						tmp.add(Utils.setPlaceholders(player, a));
+					}
+					meta.setLore(tmp);
 				}
-				meta.setLore(tmp);
+				meta.setDisplayName(Utils.setPlaceholders(player, display_name));
+				item.setItemMeta(meta);
+				this.storedItem = item;
+			} else {
+				this.storedItem = skull.getSkull(player);
 			}
-			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
-			item.setItemMeta(meta);
-			this.storedItem = item;
 		}
 		return this.storedItem.clone();
 	}
 
 	public boolean hasAction() {
 		return does_action;
+	}
+
+	public void setPlayerSkull(String string) {
+		playerSkull = true;
+		skull = new PlayerSkull(string);
 	}
 
 }

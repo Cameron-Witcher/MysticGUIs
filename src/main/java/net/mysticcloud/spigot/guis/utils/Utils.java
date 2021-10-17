@@ -447,7 +447,7 @@ public class Utils {
 			if (Utils.getEconomy().has(player, price)) {
 				Utils.getEconomy().withdrawPlayer(player, price);
 				if (action.has("item")) {
-					ItemStack i = decodeItem(action.getString("item"));
+					ItemStack i = decodeItem(Utils.setPlaceholders(player, action.getString("item")));
 					i.setAmount(amount);
 					player.getInventory().addItem(i);
 					return true;

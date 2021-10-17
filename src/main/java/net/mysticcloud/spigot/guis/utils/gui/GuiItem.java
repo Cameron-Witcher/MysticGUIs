@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.json2.JSONArray;
@@ -98,22 +99,19 @@ public class GuiItem {
 
 	public ItemStack getItem(Player player) {
 		if (storedItem == null) {
-			if (!playerSkull) {
-				ItemStack item = new ItemStack(mat);
-				ItemMeta meta = item.getItemMeta();
-				if (lore != null) {
-					List<String> tmp = new ArrayList<>();
-					for (String a : lore) {
-						tmp.add(Utils.setPlaceholders(player, a));
-					}
-					meta.setLore(tmp);
+			ItemStack item = playerSkull ? skull.getSkull(player) : new ItemStack(mat);
+			ItemMeta meta = item.getItemMeta();
+			if (lore != null) {
+				List<String> tmp = new ArrayList<>();
+				for (String a : lore) {
+					tmp.add(Utils.setPlaceholders(player, a));
 				}
-				meta.setDisplayName(Utils.setPlaceholders(player, display_name));
-				item.setItemMeta(meta);
-				this.storedItem = item;
-			} else {
-				this.storedItem = skull.getSkull(player);
+				meta.setLore(tmp);
 			}
+			meta.addItemFlags(ItemFlag.values());
+			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
+			item.setItemMeta(meta);
+			this.storedItem = item;
 		}
 		return this.storedItem.clone();
 	}

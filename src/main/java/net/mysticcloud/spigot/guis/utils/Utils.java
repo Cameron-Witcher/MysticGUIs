@@ -68,9 +68,10 @@ public class Utils {
 		deps.put("pa", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
 		deps.put("mvdwpa", Bukkit.getPluginManager().getPlugin("MVdWPlaceholderAPI") != null);
 
-		registerGuis();
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
+
+		registerGuis();
 
 	}
 

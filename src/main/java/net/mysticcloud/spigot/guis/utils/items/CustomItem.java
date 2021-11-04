@@ -79,7 +79,7 @@ public class CustomItem {
 		ItemStack item = new ItemStack(type);
 		item.setAmount(amount);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(PlaceholderAPI.setPlaceholders(player, dname));
+		meta.setDisplayName(Utils.setPlaceholders(player, dname));
 		meta.setUnbreakable(unbreakable);
 		for (EnchantmentWrapper enw : enchantments) {
 			meta.addEnchant(enw.getEnchantment(), enw.getStrength(), enw.getAmbient());

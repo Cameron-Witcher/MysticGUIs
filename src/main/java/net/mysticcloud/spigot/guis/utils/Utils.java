@@ -424,11 +424,18 @@ public class Utils {
 
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
+		Bukkit.broadcastMessage("Setting placeholders... (default)..");
 		if (dependencyEnabled("pa")) {
+			Bukkit.broadcastMessage("PA enabled.");
 			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
+		} else {
+			Bukkit.broadcastMessage("PA not enabled.");
 		}
 		if (dependencyEnabled("mvdwpa")) {
+			Bukkit.broadcastMessage("MVDWPA Enabled");
 			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
+		} else {
+			Bukkit.broadcastMessage("MVDWPA Not enabled");
 		}
 		string = colorize(string);
 		return string;

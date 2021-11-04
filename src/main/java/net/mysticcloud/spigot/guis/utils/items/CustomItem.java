@@ -35,12 +35,7 @@ public class CustomItem {
 
 	@Override
 	public CustomItem clone() {
-		try {
-			return (CustomItem) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return new CustomItem(type);
+		return this;
 	}
 
 	public Material getType() {

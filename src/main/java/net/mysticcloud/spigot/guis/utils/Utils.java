@@ -63,6 +63,7 @@ public class Utils {
 		plugin = main;
 		guiFolder = new File(plugin.getDataFolder().getPath() + "/guis");
 
+		deps.clear();
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
@@ -79,7 +80,7 @@ public class Utils {
 	}
 
 	public static void registerGuis() {
-		deps.clear();
+
 		guis.clear();
 		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
 		GuiItem item = new GuiItem("X");

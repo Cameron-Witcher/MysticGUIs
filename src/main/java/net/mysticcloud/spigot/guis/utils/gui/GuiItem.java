@@ -13,6 +13,7 @@ import org.json2.JSONObject;
 
 import net.mysticcloud.spigot.guis.utils.PlayerSkull;
 import net.mysticcloud.spigot.guis.utils.Utils;
+import net.mysticcloud.spigot.guis.utils.items.CustomItem;
 
 public class GuiItem {
 	String id;
@@ -28,9 +29,14 @@ public class GuiItem {
 	ItemStack storedItem = null;
 	boolean playerSkull = false;
 	PlayerSkull skull = null;
+	CustomItem citem = null;
 
 	public GuiItem(String id) {
 		this.id = id;
+	}
+
+	public void setCustomItem(CustomItem citem) {
+		this.citem = citem;
 	}
 
 	public void setDisplayName(String display_name) {
@@ -98,22 +104,26 @@ public class GuiItem {
 	}
 
 	public ItemStack getItem(Player player) {
-		if (storedItem == null) {
-			ItemStack item = playerSkull ? skull.getSkull(player) : new ItemStack(mat);
-			ItemMeta meta = item.getItemMeta();
-			if (lore != null) {
-				List<String> tmp = new ArrayList<>();
-				for (String a : lore) {
-					tmp.add(Utils.setPlaceholders(player, a));
+		if (citem == null) {
+			if (storedItem == null) {
+				ItemStack item = playerSkull ? skull.getSkull(player) : new ItemStack(mat);
+				ItemMeta meta = item.getItemMeta();
+				if (lore != null) {
+					List<String> tmp = new ArrayList<>();
+					for (String a : lore) {
+						tmp.add(Utils.setPlaceholders(player, a));
+					}
+					meta.setLore(tmp);
 				}
-				meta.setLore(tmp);
+				meta.addItemFlags(ItemFlag.values());
+				meta.setDisplayName(Utils.setPlaceholders(player, display_name));
+				item.setItemMeta(meta);
+				this.storedItem = item;
 			}
-			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
-			item.setItemMeta(meta);
-			this.storedItem = item;
+			return this.storedItem.clone();
+		} else {
+			return citem.getItem(player);
 		}
-		return this.storedItem.clone();
 	}
 
 	public boolean hasAction() {

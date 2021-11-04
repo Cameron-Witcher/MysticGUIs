@@ -35,6 +35,7 @@ import net.milkbowl.vault.permission.Permission;
 import net.mysticcloud.spigot.guis.utils.gui.GuiInventory;
 import net.mysticcloud.spigot.guis.utils.gui.GuiItem;
 import net.mysticcloud.spigot.guis.utils.gui.GuiManager;
+import net.mysticcloud.spigot.guis.utils.items.ItemManager;
 import net.mysticcloud.spigot.guis.utils.logs.AlertLog;
 import net.mysticcloud.spigot.guis.utils.logs.Log;
 
@@ -72,6 +73,8 @@ public class Utils {
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 
 		registerGuis();
+
+		ItemManager.init();
 
 	}
 
@@ -226,17 +229,25 @@ public class Utils {
 			for (String iid : fc.getConfigurationSection("guis." + name + ".items").getKeys(false)) {
 				log("  - Adding item: " + iid);
 				GuiItem item = new GuiItem(iid);
-				if (fc.isSet("guis." + name + ".items." + iid + ".name"))
-					item.setDisplayName(fc.getString("guis." + name + ".items." + iid + ".name"));
-				if (fc.isSet("guis." + name + ".items." + iid + ".type")) {
-					String type = fc.getString("guis." + name + ".items." + iid + ".type");
-					if (type.startsWith("PlayerSkull:")) {
-						item.setPlayerSkull(type.split(":")[1]);
-					} else if (type.startsWith("CustomItem:")) {
 
-					} else
-						item.setMaterial(Material
-								.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));
+				if (!fc.isSet("guis." + name + ".items." + iid + ".custom_item")) {
+
+					if (fc.isSet("guis." + name + ".items." + iid + ".name"))
+						item.setDisplayName(fc.getString("guis." + name + ".items." + iid + ".name"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".type")) {
+						String type = fc.getString("guis." + name + ".items." + iid + ".type");
+						if (type.startsWith("PlayerSkull:")) {
+							item.setPlayerSkull(type.split(":")[1]);
+						} else if (type.startsWith("CustomItem:")) {
+
+						} else
+							item.setMaterial(Material
+									.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));
+					}
+
+				} else {
+					item.setCustomItem(
+							ItemManager.getCustomItem(fc.getString("guis." + name + ".items." + iid + ".custom_item")));
 				}
 
 				if (fc.isSet("guis." + name + ".items." + iid + ".lore"))
@@ -413,13 +424,13 @@ public class Utils {
 
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
-		string = colorize(string);
-		if (dependencyEnabled("mvdwpa")) {
-			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
-		}
 		if (dependencyEnabled("pa")) {
 			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
 		}
+		if (dependencyEnabled("mvdwpa")) {
+			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
+		}
+		string = colorize(string);
 		return string;
 	}
 

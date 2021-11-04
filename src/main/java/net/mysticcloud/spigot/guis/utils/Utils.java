@@ -85,6 +85,7 @@ public class Utils {
 		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
 		GuiItem item = new GuiItem("X");
 		item.setDisplayName("&7Waiting...");
+		item.setMaterial(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
 		gui.addItem("X", item);
 		guis.put("waiting", gui);
 		try {
@@ -425,9 +426,9 @@ public class Utils {
 
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
-		if (dependencyEnabled("pa")) 
+		if (dependencyEnabled("pa"))
 			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
-		if (dependencyEnabled("mvdwpa")) 
+		if (dependencyEnabled("mvdwpa"))
 			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
 		string = colorize(string);
 		return string;

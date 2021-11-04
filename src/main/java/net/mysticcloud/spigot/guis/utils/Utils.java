@@ -160,8 +160,6 @@ public class Utils {
 
 	public static boolean dependencyEnabled(String key) {
 		key = key.toLowerCase();
-		Bukkit.broadcastMessage("Checking for dep: " + key);
-		Bukkit.broadcastMessage("Does it exist? " + deps.containsKey(key));
 		return deps.containsKey(key) ? deps.get(key) : false;
 	}
 
@@ -427,19 +425,10 @@ public class Utils {
 
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
-		Bukkit.broadcastMessage("Setting placeholders... (default)..");
-		if (dependencyEnabled("pa")) {
-			Bukkit.broadcastMessage("PA enabled.");
+		if (dependencyEnabled("pa")) 
 			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
-		} else {
-			Bukkit.broadcastMessage("PA not enabled.");
-		}
-		if (dependencyEnabled("mvdwpa")) {
-			Bukkit.broadcastMessage("MVDWPA Enabled");
+		if (dependencyEnabled("mvdwpa")) 
 			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
-		} else {
-			Bukkit.broadcastMessage("MVDWPA Not enabled");
-		}
 		string = colorize(string);
 		return string;
 	}

@@ -72,9 +72,9 @@ public class Utils {
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
 
-		registerGuis();
-
 		ItemManager.init();
+
+		registerGuis();
 
 	}
 

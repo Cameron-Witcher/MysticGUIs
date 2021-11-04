@@ -159,6 +159,8 @@ public class Utils {
 
 	public static boolean dependencyEnabled(String key) {
 		key = key.toLowerCase();
+		Bukkit.broadcastMessage("Checking for dep: " + key);
+		Bukkit.broadcastMessage("Does it exist? " + deps.containsKey(key));
 		return deps.containsKey(key) ? deps.get(key) : false;
 	}
 

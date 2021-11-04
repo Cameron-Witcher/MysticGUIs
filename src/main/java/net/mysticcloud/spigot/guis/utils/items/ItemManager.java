@@ -30,8 +30,10 @@ public class ItemManager {
 		try {
 
 			for (File file : itemfile.listFiles())
-				if (file.getName().startsWith("item") && file.getName().endsWith(".yml"))
+				if (file.getName().startsWith("item") && file.getName().endsWith(".yml")) {
+					Utils.log("Loading custom items from " + file.getName() + ".");
 					itemFiles.add(YamlConfiguration.loadConfiguration(file));
+				}
 			itemFiles.size();
 		} catch (NullPointerException ex) {
 			itemFiles.add(generateDefaultCustomItemFile());

@@ -72,10 +72,13 @@ public class CustomItem {
 	}
 
 	public ItemStack getItem(Player player) {
+		List<String> lore = new ArrayList<>();
+		for (String s : this.lore)
+			lore.add(Utils.setPlaceholders(player, s));
 		ItemStack item = new ItemStack(type);
 		item.setAmount(amount);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(dname);
+		meta.setDisplayName(Utils.setPlaceholders(player, dname));
 		meta.setUnbreakable(unbreakable);
 		for (EnchantmentWrapper enw : enchantments) {
 			meta.addEnchant(enw.getEnchantment(), enw.getStrength(), enw.getAmbient());

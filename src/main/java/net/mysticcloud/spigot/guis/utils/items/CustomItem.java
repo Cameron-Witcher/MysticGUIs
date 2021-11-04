@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.mysticcloud.spigot.guis.utils.Utils;
 
 public class CustomItem {
@@ -74,11 +75,11 @@ public class CustomItem {
 	public ItemStack getItem(Player player) {
 		List<String> lore = new ArrayList<>();
 		for (String s : this.lore)
-			lore.add(Utils.setPlaceholders(player, s));
+			lore.add(PlaceholderAPI.setPlaceholders(player, s));
 		ItemStack item = new ItemStack(type);
 		item.setAmount(amount);
 		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Utils.setPlaceholders(player, dname));
+		meta.setDisplayName(PlaceholderAPI.setPlaceholders(player, dname));
 		meta.setUnbreakable(unbreakable);
 		for (EnchantmentWrapper enw : enchantments) {
 			meta.addEnchant(enw.getEnchantment(), enw.getStrength(), enw.getAmbient());

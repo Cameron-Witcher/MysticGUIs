@@ -119,7 +119,8 @@ public class GuiItem {
 				meta.setLore(tmp);
 			}
 			meta.addItemFlags(ItemFlag.values());
-			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
+			if (citem == null)
+				meta.setDisplayName(Utils.setPlaceholders(player, display_name));
 			item.setItemMeta(meta);
 			this.storedItem = item;
 		}

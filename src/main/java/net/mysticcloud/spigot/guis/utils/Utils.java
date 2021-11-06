@@ -241,7 +241,8 @@ public class Utils {
 						if (type.startsWith("PlayerSkull:")) {
 							item.setPlayerSkull(type.split(":")[1]);
 						} else if (type.startsWith("CustomItem:")) {
-							item.setCustomItem(ItemManager.getCustomItem(fc.getString("guis." + name + ".items." + iid + ".type").split("ustomItem:")[1]));
+							item.setCustomItem(ItemManager.getCustomItem(
+									fc.getString("guis." + name + ".items." + iid + ".type").split("ustomItem:")[1]));
 						} else
 							item.setMaterial(Material
 									.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));
@@ -272,6 +273,8 @@ public class Utils {
 						json.put("amount", fc.getString("guis." + name + ".items." + iid + ".action.amount"));
 					if (fc.isSet("guis." + name + ".items." + iid + ".action.message"))
 						json.put("message", fc.getString("guis." + name + ".items." + iid + ".action.message"));
+					if (fc.isSet("guis." + name + ".items." + iid + ".action.command"))
+						json.put("command", fc.getString("guis." + name + ".items." + iid + ".action.command"));
 					item.setSingleAction(json);
 				}
 

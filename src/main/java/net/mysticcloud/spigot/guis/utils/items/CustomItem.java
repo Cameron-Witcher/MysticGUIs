@@ -14,13 +14,23 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.mysticcloud.spigot.guis.utils.Utils;
 
 public class CustomItem {
-	Material type;
-	int amount = 1;
-	String dname = "default_name";
-	boolean unbreakable = false;
-	List<EnchantmentWrapper> enchantments = new ArrayList<>();
-	List<String> lore = new ArrayList<>();
-	List<ItemFlag> itemFlags = new ArrayList<>();
+	private Material type;
+	private int amount = 1;
+	private String dname = "default_name";
+	private boolean unbreakable = false;
+	private List<EnchantmentWrapper> enchantments = new ArrayList<>();
+	private List<String> lore = new ArrayList<>();
+	private List<ItemFlag> itemFlags = new ArrayList<>();
+
+	private CustomItem(CustomItem clone) {
+		this.type = clone.type;
+		this.amount = clone.amount;
+		this.dname = clone.dname;
+		this.unbreakable = clone.unbreakable;
+		this.enchantments = clone.enchantments;
+		this.lore = clone.lore;
+		this.itemFlags = clone.itemFlags;
+	}
 
 	public CustomItem(Material type) {
 		this.type = type;
@@ -36,7 +46,7 @@ public class CustomItem {
 
 	@Override
 	public CustomItem clone() {
-		return this;
+		return new CustomItem(this);
 	}
 
 	public Material getType() {
@@ -62,6 +72,10 @@ public class CustomItem {
 	public void addItemFlags(ItemFlag... flags) {
 		for (ItemFlag flag : flags)
 			itemFlags.add(flag);
+	}
+
+	public int getAmount() {
+		return amount;
 	}
 
 	public boolean hasDisplayName() {

@@ -104,26 +104,26 @@ public class GuiItem {
 	}
 
 	public ItemStack getItem(Player player) {
-		if (citem == null) {
-			if (storedItem == null) {
-				ItemStack item = playerSkull ? skull.getSkull(player) : new ItemStack(mat);
-				ItemMeta meta = item.getItemMeta();
-				if (lore != null) {
-					List<String> tmp = new ArrayList<>();
-					for (String a : lore) {
-						tmp.add(Utils.setPlaceholders(player, a));
-					}
-					meta.setLore(tmp);
+		if (storedItem == null) {
+			ItemStack item = playerSkull ? skull.getSkull(player)
+					: (citem == null ? new ItemStack(mat) : citem.getItem(player));
+			ItemMeta meta = item.getItemMeta();
+			if (lore != null) {
+				List<String> tmp = new ArrayList<>();
+				if (meta.hasLore())
+					for (String a : meta.getLore())
+						tmp.add(a);
+				for (String a : lore) {
+					tmp.add(Utils.setPlaceholders(player, a));
 				}
-				meta.addItemFlags(ItemFlag.values());
-				meta.setDisplayName(Utils.setPlaceholders(player, display_name));
-				item.setItemMeta(meta);
-				this.storedItem = item;
+				meta.setLore(tmp);
 			}
-			return this.storedItem.clone();
-		} else {
-			return citem.getItem(player);
+			meta.addItemFlags(ItemFlag.values());
+			meta.setDisplayName(Utils.setPlaceholders(player, display_name));
+			item.setItemMeta(meta);
+			this.storedItem = item;
 		}
+		return this.storedItem.clone();
 	}
 
 	public boolean hasAction() {

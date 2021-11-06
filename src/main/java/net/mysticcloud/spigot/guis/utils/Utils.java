@@ -85,7 +85,7 @@ public class Utils {
 		GuiInventory gui = new GuiInventory("waiting", "&7Waiting...", 9, "XXXXXXXXX");
 		GuiItem item = new GuiItem("X");
 		item.setDisplayName("&7Waiting...");
-		item.setMaterial(Material.LIGHT_GRAY_STAINED_GLASS_PANE);
+		item.setMaterial(Material.GRAY_STAINED_GLASS_PANE);
 		gui.addItem("X", item);
 		guis.put("waiting", gui);
 		try {
@@ -241,7 +241,7 @@ public class Utils {
 						if (type.startsWith("PlayerSkull:")) {
 							item.setPlayerSkull(type.split(":")[1]);
 						} else if (type.startsWith("CustomItem:")) {
-
+							item.setCustomItem(ItemManager.getCustomItem(fc.getString("guis." + name + ".items." + iid + ".type").split("ustomItem:")[1]));
 						} else
 							item.setMaterial(Material
 									.valueOf(fc.getString("guis." + name + ".items." + iid + ".type").toUpperCase()));

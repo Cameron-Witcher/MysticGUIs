@@ -32,6 +32,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import net.mysticcloud.spigot.core.utils.PlaceholderAPI;
 import net.mysticcloud.spigot.guis.utils.gui.GuiInventory;
 import net.mysticcloud.spigot.guis.utils.gui.GuiItem;
 import net.mysticcloud.spigot.guis.utils.gui.GuiManager;
@@ -67,8 +68,7 @@ public class Utils {
 		deps.put("vault-econ", setupEconomy());
 		deps.put("vault-chat", setupChat());
 		deps.put("vault-perm", setupPermissions());
-		deps.put("pa", Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null);
-		deps.put("mvdwpa", Bukkit.getPluginManager().getPlugin("MVdWPlaceholderAPI") != null);
+		deps.put("mp", Bukkit.getPluginManager().getPlugin("MysticPlaceholders") != null);
 
 		for (Entry<String, Boolean> e : deps.entrySet())
 			log("Dependency check (" + e.getKey() + "): " + e.getValue());
@@ -429,10 +429,8 @@ public class Utils {
 
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
-		if (dependencyEnabled("pa"))
-			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
-		if (dependencyEnabled("mvdwpa"))
-			string = be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(player, string);
+		if (dependencyEnabled("mp"))
+			string = PlaceholderAPI.setPlaceholders(player, string);
 		string = colorize(string);
 		return string;
 	}

@@ -6,7 +6,7 @@
 
 	<target name="clean" description="Cleans project">
 		<exec dir="." executable="sh">
-			<arg line="-c 'rm /home/Minecraft/Dependencies/${project.projectname}.jar'" />
+			<arg line="-c 'rm /var/www/downloads/${project.projectname}.jar'" />
 		</exec>
 	</target>
 
@@ -18,10 +18,7 @@
 
 	<target name="createjar" description="Create a jar for the project" depends="mvn">
 		<exec dir="." executable="sh">
-			<arg line="-c 'cp target/${project.projectname}.jar /home/Minecraft/Dependencies/${project.projectname}.jar'" />
-		</exec>
-		<exec dir="." executable="sh">
-			<arg line="-c 'cp target/${project.projectname}.jar /home/Minecraft/multicraft/jar/spigot.jar.plugins/${project.projectname}.jar'" />
+			<arg line="-c 'cp target/${project.projectname}.jar /var/www/downloads/${project.projectname}.jar'" />
 		</exec>
 	</target>
 

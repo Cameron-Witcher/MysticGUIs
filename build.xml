@@ -18,7 +18,7 @@
 
 	<target name="createjar" description="Create a jar for the project" depends="mvn">
 		<exec dir="." executable="sh">
-			<arg line="-c 'cp target/${project.projectname}.jar /var/www/downloads/plugins/${project.projectname}.jar'" />
+			<arg line="-c 'cp target/*.jar /var/www/downloads/plugins/${project.projectname}.jar'" />
 		</exec>
 	</target>
 

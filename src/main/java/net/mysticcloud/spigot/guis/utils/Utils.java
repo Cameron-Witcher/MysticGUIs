@@ -32,7 +32,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import net.mysticcloud.spigot.core.utils.PlaceholderAPI;
+import net.mysticcloud.spigot.guis.utils.Perm;
 import net.mysticcloud.spigot.guis.utils.gui.GuiInventory;
 import net.mysticcloud.spigot.guis.utils.gui.GuiItem;
 import net.mysticcloud.spigot.guis.utils.gui.GuiManager;
@@ -430,7 +430,7 @@ public class Utils {
 	public static String setPlaceholders(Player player, String string) {
 		string = string.replaceAll("%player%", player.getName());
 		if (dependencyEnabled("mp"))
-			string = PlaceholderAPI.setPlaceholders(player, string);
+			string = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, string);
 		string = colorize(string);
 		return string;
 	}

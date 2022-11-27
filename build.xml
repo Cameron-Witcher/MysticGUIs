@@ -6,7 +6,7 @@
 
 	<target name="clean" description="Cleans project">
 		<exec dir="." executable="sh">
-			<arg line="-c 'rm /var/www/downloads/${project.projectname}.jar'" />
+			<arg line="-c 'rm /var/www/downloads/plugins/${project.projectname}.jar'" />
 		</exec>
 	</target>
 
@@ -18,7 +18,7 @@
 
 	<target name="createjar" description="Create a jar for the project" depends="mvn">
 		<exec dir="." executable="sh">
-			<arg line="-c 'cp target/${project.projectname}.jar /var/www/downloads/${project.projectname}.jar'" />
+			<arg line="-c 'cp target/${project.projectname}.jar /var/www/downloads/plugins/${project.projectname}.jar'" />
 		</exec>
 	</target>
 

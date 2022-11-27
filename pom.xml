@@ -13,7 +13,7 @@
 		<repository>
 			<id>mvdw-software</id>
 			<name>MVdW Public Repositories</name>
-			<url>https://mvnrepository.com/artifact/be.maximvdw/MVdWPlaceholderAPI</url>
+			<url>/var/www/downloads/plugins/MVdWPlaceholderAPI.jar</url>
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
